@@ -44,6 +44,8 @@ backend/uploads/
 backend/data/nsqf_pdfs/
 *.pdf
 *.docx
+screenshot_*.png
+*.png
 
 # --- HuggingFace model cache ---
 .cache/
