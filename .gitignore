@@ -1,5 +1,5 @@
 # =============================================================================
-# Vidyavani — .gitignore
+# SkillSync AI — .gitignore
 # =============================================================================
 
 # --- Secrets (NEVER commit these) ---
@@ -47,7 +47,6 @@ backend/data/nsqf_pdfs/
 *.pptx
 *.ppt
 screenshot_*.png
-*.png
 
 # --- HuggingFace model cache ---
 .cache/
