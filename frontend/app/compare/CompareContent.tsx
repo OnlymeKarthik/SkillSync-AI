@@ -60,6 +60,8 @@ function CompareCell({ value, best, worst, type }: { value: number | string | bo
   );
 }
 
+const COLUMN_ACCENTS = ["border-t-violet-500", "border-t-blue-500", "border-t-emerald-500"];
+
 export default function CompareContent() {
   const [selected, setSelected] = useState<Career[]>([CAREERS[0], CAREERS[1]]);
   const [search, setSearch] = useState("");
@@ -100,7 +102,7 @@ export default function CompareContent() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Selector panel */}
         <div className="lg:col-span-1">
-          <div className="glass rounded-2xl p-4 sticky top-24 border border-white/10">
+          <div className="glass-elevated rounded-2xl p-4 sticky top-24">
             <div className="flex items-center justify-between mb-3">
               <p className="text-xs text-gray-400 uppercase tracking-wider font-semibold">
                 Select Careers
@@ -115,7 +117,7 @@ export default function CompareContent() {
               placeholder="Search careers..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3.5 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-violet-500/50 text-sm mb-3 transition-all"
+              className="input-field mb-3"
             />
             <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
               {available.map(c => (
@@ -123,7 +125,7 @@ export default function CompareContent() {
                   key={c.id}
                   onClick={() => addCareer(c)}
                   disabled={selected.length >= 3}
-                  className="w-full text-left p-3 rounded-xl border border-white/8 hover:border-violet-500/30 hover:bg-violet-500/5 transition-all group disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="w-full text-left p-3 rounded-xl border border-white/8 hover:border-violet-500/30 hover:bg-violet-500/5 transition-all duration-200 group disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   <div className="flex items-center gap-2.5">
                     <div className="w-6 h-6 rounded-lg bg-white/5 group-hover:bg-violet-600/30 flex items-center justify-center transition-colors shrink-0">
@@ -146,7 +148,7 @@ export default function CompareContent() {
         {/* Comparison area */}
         <div className="lg:col-span-3">
           {selected.length === 0 ? (
-            <div className="glass rounded-2xl p-16 text-center border border-white/10">
+            <div className="glass-elevated rounded-2xl p-16 text-center">
               <ArrowLeftRight className="w-12 h-12 text-violet-400/40 mx-auto mb-4" />
               <p className="text-gray-200 text-lg font-bold mb-2">Select careers to compare</p>
               <p className="text-gray-400 text-sm max-w-sm mx-auto">
@@ -163,9 +165,7 @@ export default function CompareContent() {
                 {selected.map((c, i) => (
                   <div
                     key={c.id}
-                    className={`glass rounded-2xl p-4 border-t-2 border border-white/[0.08] ${
-                      i === 0 ? "border-t-violet-500" : i === 1 ? "border-t-blue-500" : "border-t-emerald-500"
-                    }`}
+                    className={`glass-elevated rounded-2xl p-4 border-t-2 ${COLUMN_ACCENTS[i]}`}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div>
@@ -283,8 +283,8 @@ export default function CompareContent() {
                     </div>
                   ),
                 },
-              ].map(({ label, icon: Icon, render }) => (
-                <div key={label} className="glass rounded-xl mb-3 overflow-hidden border border-white/[0.07]">
+              ].map(({ label, icon: Icon, render }, rowIdx) => (
+                <div key={label} className={`glass rounded-xl mb-3 overflow-hidden ${rowIdx % 2 === 1 ? "bg-white/[0.01]" : ""}`}>
                   <div className="flex items-center gap-2 px-4 py-2.5 bg-white/[0.02] border-b border-white/5">
                     <Icon className="w-3.5 h-3.5 text-violet-400" />
                     <span className="text-xs text-gray-400 font-semibold uppercase tracking-wider">

@@ -189,7 +189,7 @@ Start with DevOps if you're intermediate; advance to Cloud Architect as you gain
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex flex-col h-[calc(100vh-5.5rem)]">
       {/* Top Bar / Header */}
-      <div className="flex items-center justify-between pb-4 mb-4 border-b border-white/[0.08] shrink-0">
+      <div className="flex items-center justify-between pb-4 mb-4 shrink-0">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-blue-600 flex items-center justify-center shadow-lg shadow-violet-600/20">
             <Bot className="w-5 h-5 text-white" />
@@ -208,17 +208,20 @@ Start with DevOps if you're intermediate; advance to Cloud Architect as you gain
         <button
           id="reset-chat"
           onClick={handleReset}
-          className="flex items-center gap-1.5 text-xs font-semibold text-gray-400 hover:text-white transition-colors px-3 py-1.5 rounded-lg glass hover:bg-white/10"
+          className="btn-ghost text-xs"
         >
           <RotateCcw className="w-3.5 h-3.5" />
           <span>New chat</span>
         </button>
       </div>
 
+      {/* Gradient divider */}
+      <div className="section-divider mb-4 shrink-0" />
+
       {/* Starter Prompts (Shown only at start) */}
       {messages.length === 1 && (
         <div className="py-4 shrink-0">
-          <p className="text-xs text-gray-400 uppercase tracking-wider mb-2.5 text-center font-semibold">
+          <p className="text-xs text-gray-400 uppercase tracking-wider mb-3 text-center font-semibold">
             Suggested Prompts
           </p>
           <div className="flex flex-wrap gap-2 justify-center">
@@ -226,7 +229,7 @@ Start with DevOps if you're intermediate; advance to Cloud Architect as you gain
               <button
                 key={i}
                 onClick={() => handleSend(prompt)}
-                className="text-xs sm:text-sm glass border border-white/10 hover:border-violet-500/40 hover:text-violet-300 text-gray-300 rounded-full px-3.5 py-1.5 transition-all"
+                className="text-xs sm:text-sm glass border border-white/10 hover:border-violet-500/40 hover:text-violet-300 hover:scale-[1.02] text-gray-300 rounded-full px-4 py-2 transition-all duration-200"
               >
                 {prompt}
               </button>
@@ -259,11 +262,17 @@ Start with DevOps if you're intermediate; advance to Cloud Architect as you gain
             <div className={`group max-w-[85%] relative ${msg.role === "user" ? "items-end" : "items-start"} flex flex-col gap-1`}>
               <div className={`rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
                 msg.role === "user"
-                  ? "bg-violet-600 text-white font-medium rounded-tr-sm shadow-md"
-                  : "glass border border-white/10 text-gray-200 rounded-tl-sm shadow-sm"
-              } ${msg.id !== "init" && !msg.content && isStreaming ? "typing-cursor" : ""}`}>
+                  ? "bg-violet-600 text-white font-medium rounded-tr-sm shadow-md shadow-violet-600/20"
+                  : "glass-elevated text-gray-200 rounded-tl-sm"
+              }`}>
                 {msg.content ? formatMessage(msg.content) : (
-                  isStreaming ? <span className="text-gray-400">Consulting knowledge graph...</span> : null
+                  isStreaming ? (
+                    <span className="flex items-center gap-1.5 text-gray-400">
+                      <span className="typing-dot" />
+                      <span className="typing-dot" />
+                      <span className="typing-dot" />
+                    </span>
+                  ) : null
                 )}
               </div>
 
@@ -287,8 +296,9 @@ Start with DevOps if you're intermediate; advance to Cloud Architect as you gain
       </div>
 
       {/* Input Area */}
-      <div className="pt-3 pb-2 border-t border-white/[0.08] shrink-0">
-        <div className="glass border border-white/10 rounded-2xl flex items-end gap-3 p-2.5 focus-within:border-violet-500/50 transition-colors">
+      <div className="pt-3 pb-2 shrink-0">
+        <div className="section-divider mb-3" />
+        <div className="glass-elevated rounded-2xl flex items-end gap-3 p-2.5 focus-within:border-violet-500/50 focus-within:shadow-[0_0_0_3px_rgba(139,92,246,0.1)] transition-all">
           <textarea
             ref={inputRef}
             id="chat-input"
@@ -303,12 +313,12 @@ Start with DevOps if you're intermediate; advance to Cloud Architect as you gain
             id="send-message"
             onClick={() => handleSend()}
             disabled={!input.trim() || isStreaming}
-            className="w-9 h-9 rounded-xl bg-violet-600 hover:bg-violet-500 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition-all flex-shrink-0 shadow-md"
+            className="w-9 h-9 rounded-xl bg-violet-600 hover:bg-violet-500 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition-all flex-shrink-0 shadow-md shadow-violet-600/20"
           >
             <Send className="w-4 h-4 text-white" />
           </button>
         </div>
-        <p className="text-[11px] text-gray-500 text-center mt-2">
+        <p className="text-[11px] text-gray-500 text-center mt-2.5">
           Streaming inference via Groq Cloud · Fallback to Google Gemini & local Ollama
         </p>
       </div>

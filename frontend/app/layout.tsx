@@ -20,7 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.variable} font-sans bg-[#030712] text-gray-100 min-h-screen flex flex-col antialiased bg-grid relative selection:bg-violet-500/30 selection:text-white`}>
+      <body className={`${inter.variable} font-sans bg-[#030712] text-gray-100 min-h-screen flex flex-col antialiased bg-grid relative selection:bg-violet-500/30 selection:text-white noise-overlay`}>
         <div className="bg-glow-violet fixed inset-0 pointer-events-none z-0" />
         <Navbar />
         <main className="app-main">{children}</main>

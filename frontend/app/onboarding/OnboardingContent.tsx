@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   Upload, FileText, X, CheckCircle, Loader2,
   Sparkles, ChevronRight, AlertCircle, User,
@@ -48,9 +49,14 @@ const DEMO_RESULT: ResumeAnalysis = {
   ],
 };
 
-function SkillBadge({ skill }: { skill: ExtractedSkill }) {
+function SkillBadge({ skill, index }: { skill: ExtractedSkill; index: number }) {
   return (
-    <div className="flex items-center gap-2 p-3 glass rounded-xl border border-white/8">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: index * 0.04 }}
+      className="flex items-center gap-2 p-3 glass-elevated rounded-xl"
+    >
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
           <span className={`text-sm font-semibold truncate ${CATEGORY_COLORS[skill.category] ?? "text-gray-300"}`}>
@@ -64,10 +70,18 @@ function SkillBadge({ skill }: { skill: ExtractedSkill }) {
         </div>
         <p className="text-xs text-gray-500 mt-0.5">{skill.category}</p>
       </div>
-      <div className="flex-shrink-0 text-xs text-gray-400 font-mono">
-        {Math.round(skill.confidence * 100)}%
+      <div className="flex-shrink-0">
+        <div className="text-xs text-gray-400 font-mono mb-0.5 text-right">
+          {Math.round(skill.confidence * 100)}%
+        </div>
+        <div className="w-12 h-1 bg-white/10 rounded-full overflow-hidden">
+          <div
+            className="h-1 rounded-full bg-violet-500"
+            style={{ width: `${skill.confidence * 100}%` }}
+          />
+        </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -146,14 +160,17 @@ export default function OnboardingContent() {
 
       {/* Upload Area */}
       {uploadState === "idle" && (
-        <div
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
           onDragOver={e => { e.preventDefault(); setDragOver(true); }}
           onDragLeave={() => setDragOver(false)}
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
           className={`relative flex flex-col items-center justify-center border-2 border-dashed rounded-3xl p-12 sm:p-16 text-center cursor-pointer transition-all duration-300 glass ${
             dragOver
-              ? "border-violet-400 bg-violet-500/10 scale-[1.01]"
+              ? "border-violet-400 bg-violet-500/10 scale-[1.01] shadow-lg shadow-violet-600/10"
               : "border-white/15 hover:border-violet-500/40 hover:bg-white/[0.04]"
           }`}
         >
@@ -165,60 +182,79 @@ export default function OnboardingContent() {
             className="hidden"
             onChange={e => e.target.files?.[0] && handleFile(e.target.files[0])}
           />
-          <div className="w-20 h-20 mx-auto mb-5 rounded-2xl bg-violet-600/15 border border-violet-500/30 flex items-center justify-center shadow-lg shadow-violet-600/20">
+          <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-violet-600/15 border border-violet-500/30 flex items-center justify-center shadow-lg shadow-violet-600/20">
             <Upload className="w-9 h-9 text-violet-400" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">
             {dragOver ? "Drop file to analyze!" : "Drag & drop your resume here"}
           </h2>
-          <p className="text-gray-400 text-sm mb-5">
+          <p className="text-gray-400 text-sm mb-6">
             PDF or DOCX format · Up to 10 MB file size
           </p>
           <button
             type="button"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-violet-600 hover:bg-violet-500 text-white rounded-xl font-semibold text-sm transition-all shadow-md shadow-violet-600/25"
+            className="btn-primary"
           >
             <FileText className="w-4 h-4" />
             <span>Browse Computer</span>
           </button>
-        </div>
+        </motion.div>
       )}
 
       {/* Uploading State */}
       {uploadState === "uploading" && (
-        <div className="glass rounded-3xl p-16 text-center border border-white/10">
-          <div className="w-20 h-20 mx-auto mb-5 rounded-2xl bg-violet-600/15 border border-violet-500/30 flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="glass-elevated rounded-3xl p-16 text-center"
+        >
+          <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-violet-600/15 border border-violet-500/30 flex items-center justify-center">
             <Loader2 className="w-9 h-9 text-violet-400 animate-spin" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">Analyzing your resume...</h2>
           <p className="text-gray-400 text-sm mb-6">{file?.name}</p>
           <div className="flex flex-col gap-2.5 text-xs sm:text-sm text-gray-400 max-w-sm mx-auto">
             {["Extracting text with PyMuPDF", "spaCy domain skill entity recognition", "1024-dim BAAI/bge-m3 dense embedding", "Matching NSQF Level & Qualification Packs"].map((step, i) => (
-              <div key={i} className="flex items-center gap-2 text-left glass p-2 rounded-lg border border-white/5">
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.2 }}
+                className="flex items-center gap-2 text-left glass p-2.5 rounded-lg border border-white/5"
+              >
                 <Sparkles className="w-3.5 h-3.5 text-violet-400 animate-pulse shrink-0" />
                 <span>{step}</span>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* Error state */}
       {error && (
-        <div className="glass rounded-2xl p-5 border border-red-500/30 flex items-center gap-3 mt-4">
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="glass rounded-2xl p-5 border border-red-500/30 flex items-center gap-3 mt-4"
+        >
           <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
           <p className="text-sm text-red-300">{error}</p>
-        </div>
+        </motion.div>
       )}
 
       {/* Results */}
       {uploadState === "success" && result && (
-        <div className="space-y-6">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="space-y-6"
+        >
           {/* Profile card */}
-          <div className="glass rounded-2xl p-6 border border-violet-500/25">
+          <div className="glass-elevated rounded-2xl p-6 border border-violet-500/25">
             <div className="flex items-start justify-between mb-5">
               <div className="flex items-center gap-3.5">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-600 to-blue-600 flex items-center justify-center shadow-lg">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-600 to-blue-600 flex items-center justify-center shadow-lg shadow-violet-600/20">
                   <User className="w-6 h-6 text-white" />
                 </div>
                 <div>
@@ -242,7 +278,7 @@ export default function OnboardingContent() {
                 { icon: Code, label: "Skills Extracted", value: `${result.skill_count} detected` },
               ].map(({ icon: Icon, label, value }) => (
                 <div key={label} className="bg-white/[0.03] border border-white/5 rounded-xl p-3.5 text-center">
-                  <Icon className="w-4 h-4 text-violet-400 mx-auto mb-1" />
+                  <Icon className="w-4 h-4 text-violet-400 mx-auto mb-1.5" />
                   <p className="text-[11px] text-gray-500 uppercase tracking-wider mb-0.5">{label}</p>
                   <p className="text-sm font-bold text-white truncate">{value}</p>
                 </div>
@@ -256,8 +292,8 @@ export default function OnboardingContent() {
           </div>
 
           {/* Extracted skills */}
-          <div className="glass rounded-2xl p-6 border border-white/10">
-            <div className="flex items-center justify-between mb-4">
+          <div className="glass-elevated rounded-2xl p-6">
+            <div className="flex items-center justify-between mb-5">
               <h3 className="text-white font-bold text-base sm:text-lg">Extracted Competency Skills</h3>
               <span className="text-xs font-semibold text-violet-300 bg-violet-500/15 border border-violet-500/30 px-3 py-1 rounded-full">
                 {result.skill_count} skills identified
@@ -265,14 +301,14 @@ export default function OnboardingContent() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {result.extracted_skills.map((skill, i) => (
-                <SkillBadge key={i} skill={skill} />
+                <SkillBadge key={i} skill={skill} index={i} />
               ))}
             </div>
           </div>
 
           {/* Next Steps CTA */}
-          <div className="glass rounded-2xl p-6 border border-emerald-500/30 bg-emerald-500/[0.02]">
-            <div className="flex items-center gap-2 text-emerald-300 font-bold mb-1">
+          <div className="glass-elevated rounded-2xl p-6 border border-emerald-500/30 bg-emerald-500/[0.02]">
+            <div className="flex items-center gap-2 text-emerald-300 font-bold mb-1.5">
               <CheckCircle className="w-5 h-5 text-emerald-400" />
               <span>Resume Analysis Ready!</span>
             </div>
@@ -282,28 +318,28 @@ export default function OnboardingContent() {
             <div className="flex gap-3 flex-wrap">
               <Link
                 href="/discover"
-                className="flex items-center gap-1.5 px-4 py-2.5 bg-violet-600 hover:bg-violet-500 text-white rounded-xl text-xs sm:text-sm font-semibold transition-all shadow-md shadow-violet-600/20"
+                className="btn-primary text-xs sm:text-sm"
               >
                 <span>Explore Careers</span>
                 <ChevronRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/roadmap"
-                className="flex items-center gap-1.5 px-4 py-2.5 glass border border-white/10 hover:border-violet-500/40 text-gray-200 hover:text-white rounded-xl text-xs sm:text-sm font-semibold transition-all"
+                className="btn-secondary text-xs sm:text-sm"
               >
                 <span>Generate Roadmap</span>
                 <ChevronRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/chat"
-                className="flex items-center gap-1.5 px-4 py-2.5 glass border border-white/10 hover:border-violet-500/40 text-gray-200 hover:text-white rounded-xl text-xs sm:text-sm font-semibold transition-all"
+                className="btn-secondary text-xs sm:text-sm"
               >
                 <span>Talk to AI Advisor</span>
                 <ChevronRight className="w-4 h-4" />
               </Link>
             </div>
           </div>
-        </div>
+        </motion.div>
       )}
     </div>
   );

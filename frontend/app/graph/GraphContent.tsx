@@ -268,7 +268,7 @@ export default function GraphContent() {
       />
 
       {/* Control Toolbar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-6 glass p-3.5 rounded-2xl border border-white/[0.08]">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6 glass-elevated p-3.5 rounded-2xl">
         {/* Category Filters */}
         <div className="flex flex-wrap gap-1.5 items-center">
           {["All", "Programming", "Cloud & DevOps", "Data Science", "AI/ML", "Roles"].map(cat => (
@@ -328,7 +328,7 @@ export default function GraphContent() {
       {/* Main Canvas & Details Drawer */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Graph Canvas */}
-        <div className="lg:col-span-3 glass rounded-2xl border border-white/[0.08] overflow-hidden relative min-h-[520px] flex items-center justify-center bg-[#070b14]">
+        <div className="lg:col-span-3 glass-elevated rounded-2xl overflow-hidden relative min-h-[520px] flex items-center justify-center bg-[#070b14]">
           <canvas
             ref={canvasRef}
             width={900}
@@ -342,7 +342,7 @@ export default function GraphContent() {
           />
 
           {/* Quick Legend Overlay */}
-          <div className="absolute bottom-3 left-3 glass px-3 py-2 rounded-xl border border-white/10 text-[11px] text-gray-400 flex items-center gap-3 pointer-events-none">
+          <div className="absolute bottom-3 left-3 glass-elevated px-3 py-2.5 rounded-xl text-[11px] text-gray-400 flex items-center gap-3 pointer-events-none">
             <div className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-violet-500" />
               <span>Skills</span>
@@ -361,7 +361,7 @@ export default function GraphContent() {
         {/* Selected Node Details Drawer */}
         <div className="lg:col-span-1">
           {selectedNode ? (
-            <div className="glass rounded-2xl p-5 border border-white/10 sticky top-24">
+            <div className="glass-elevated rounded-2xl p-5 sticky top-24">
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <span className="text-[11px] font-semibold text-violet-400 uppercase tracking-wider">
@@ -419,14 +419,14 @@ export default function GraphContent() {
               {/* Quick Actions */}
               <a
                 href={`/roadmap?career=${encodeURIComponent(selectedNode.label)}`}
-                className="flex items-center justify-center gap-1.5 w-full py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-semibold text-xs transition-all shadow-md shadow-violet-600/20"
+                className="btn-primary w-full justify-center text-xs"
               >
                 <span>Generate Roadmap for Node</span>
                 <ChevronRight size={14} />
               </a>
             </div>
           ) : (
-            <div className="glass rounded-2xl p-8 text-center border border-white/10 sticky top-24">
+            <div className="glass-elevated rounded-2xl p-8 text-center sticky top-24">
               <Info className="w-8 h-8 text-violet-400/40 mx-auto mb-3" />
               <h4 className="text-sm font-bold text-white mb-1">Click a Node to Inspect</h4>
               <p className="text-xs text-gray-400 leading-relaxed">

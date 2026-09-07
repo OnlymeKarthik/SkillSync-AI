@@ -1,4 +1,7 @@
+"use client";
+
 import React from "react";
+import { motion } from "framer-motion";
 
 interface PageHeaderProps {
   badge?: {
@@ -30,21 +33,33 @@ export default function PageHeader({
   const Icon = badge?.icon;
 
   return (
-    <div className={`mb-8 md:mb-10 ${className}`}>
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className={`mb-10 md:mb-12 ${className}`}
+    >
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           {badge && (
-            <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border mb-3 ${BADGE_VARIANTS[variant]}`}>
+            <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border mb-4 ${BADGE_VARIANTS[variant]}`}>
               {Icon && <Icon size={13} className="shrink-0" />}
               <span>{badge.text}</span>
             </div>
           )}
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white mb-2.5">
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white mb-3">
             {title}
           </h1>
           <p className="text-sm sm:text-base text-gray-400 max-w-3xl leading-relaxed">
             {description}
           </p>
+          {/* Gradient underline */}
+          <div
+            className="mt-4 h-0.5 w-20 rounded-full"
+            style={{
+              background: "linear-gradient(90deg, #8b5cf6 0%, #3b82f6 50%, transparent 100%)",
+            }}
+          />
         </div>
 
         {actions && (
@@ -53,6 +68,6 @@ export default function PageHeader({
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }

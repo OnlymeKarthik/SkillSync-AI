@@ -32,24 +32,44 @@ const navLinks = [
 export default function Navbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   // Close mobile menu on route change
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [pathname]);
 
+  // Track scroll for navbar transparency
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <>
-      <motion.nav
-        initial={{ y: -60, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.35, ease: "easeOut" }}
-        className="fixed top-0 left-0 right-0 z-50 h-16 glass border-b border-white/[0.07] bg-[#030712]/80 backdrop-blur-md"
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 h-16 backdrop-blur-xl transition-all duration-300 ${
+          scrolled
+            ? "bg-[#030712]/95 border-b border-white/[0.10] shadow-lg shadow-black/25"
+            : "bg-[#030712]/75 border-b border-white/[0.06]"
+        }`}
       >
+        {/* Gradient glow line at bottom — visible on scroll */}
+        <div
+          className={`absolute bottom-0 left-0 right-0 h-px transition-opacity duration-300 ${
+            scrolled ? "opacity-100" : "opacity-0"
+          }`}
+          style={{
+            background:
+              "linear-gradient(90deg, transparent 0%, rgba(139,92,246,0.3) 30%, rgba(59,130,246,0.2) 70%, transparent 100%)",
+          }}
+        />
+
         <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 group shrink-0">
-            <div className="w-8 h-8 rounded-lg bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-600/30 group-hover:scale-105 transition-transform">
+            <div className="w-8 h-8 rounded-lg bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-600/30 group-hover:shadow-violet-500/40 group-hover:scale-105 transition-all duration-200">
               <BrainCircuit size={18} className="text-white" />
             </div>
             <span className="font-bold text-lg gradient-text-brand tracking-tight">
@@ -58,17 +78,17 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Nav links */}
-          <div className="hidden lg:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-0.5">
             {navLinks.map(({ href, label, icon: Icon }) => {
               const active = pathname === href;
               return (
                 <Link
                   key={href}
                   href={href}
-                  className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-150 ${
+                  className={`relative flex items-center gap-1.5 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 focus-ring ${
                     active
-                      ? "text-violet-300 bg-violet-500/10 font-semibold"
-                      : "text-gray-400 hover:text-gray-100 hover:bg-white/[0.04]"
+                      ? "text-violet-300 font-semibold"
+                      : "text-gray-400 hover:text-gray-100 hover:bg-white/[0.05]"
                   }`}
                 >
                   <Icon size={14} />
@@ -86,10 +106,10 @@ export default function Navbar() {
           </div>
 
           {/* Right side CTAs */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
             <Link
               href="/onboarding"
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-xs sm:text-sm font-medium transition-all duration-200 hover:shadow-lg hover:shadow-violet-500/25 active:scale-95"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-xs sm:text-sm font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-violet-500/25 active:scale-95 focus-ring"
             >
               <FileText size={14} />
               <span className="hidden xs:inline">Upload Resume</span>
@@ -98,7 +118,7 @@ export default function Navbar() {
 
             <Link
               href="/dashboard?sector=GOVERNMENT"
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-gray-400 hover:text-gray-100 hover:bg-white/[0.04] text-xs sm:text-sm font-medium border border-transparent hover:border-white/10 transition-all"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-lg text-gray-400 hover:text-gray-100 hover:bg-white/[0.05] text-xs sm:text-sm font-medium border border-transparent hover:border-white/10 transition-all focus-ring"
             >
               <LayoutDashboard size={14} />
               <span className="hidden xl:inline">Govt Panel</span>
@@ -107,14 +127,14 @@ export default function Navbar() {
             {/* Mobile Hamburger Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+              className="lg:hidden p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors focus-ring"
               aria-label="Toggle navigation menu"
             >
               {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>
-      </motion.nav>
+      </nav>
 
       {/* Mobile Drawer Menu */}
       <AnimatePresence>
@@ -132,10 +152,10 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed top-16 right-0 bottom-0 z-50 w-72 bg-[#090d16] border-l border-white/10 p-5 flex flex-col justify-between lg:hidden overflow-y-auto"
+              className="fixed top-16 right-0 bottom-0 z-50 w-72 bg-[#090d16]/95 backdrop-blur-xl border-l border-white/10 p-5 flex flex-col justify-between lg:hidden overflow-y-auto"
             >
-              <div className="space-y-1.5">
-                <div className="text-xs font-semibold uppercase tracking-wider text-gray-500 px-3 py-2">
+              <div className="space-y-1">
+                <div className="text-[11px] font-semibold uppercase tracking-widest text-gray-500 px-3 py-2 mb-1">
                   Navigation
                 </div>
                 {navLinks.map(({ href, label, icon: Icon }) => {

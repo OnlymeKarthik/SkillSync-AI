@@ -25,16 +25,18 @@ const SECTOR_COLORS = {
 function CustomTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="glass rounded-xl p-3 border border-white/10 shadow-xl">
-      <p className="text-sm font-semibold text-gray-100 mb-2">{label}</p>
+    <div className="glass-elevated rounded-xl p-3.5 border border-white/10 shadow-xl min-w-[160px]">
+      <p className="text-sm font-semibold text-gray-100 mb-2.5 pb-2 border-b border-white/[0.06]">{label}</p>
       {payload.map((entry: any) => (
-        <div key={entry.name} className="flex items-center gap-2 text-xs">
-          <div
-            className="w-2 h-2 rounded-full"
-            style={{ background: entry.color }}
-          />
-          <span className="text-gray-400">{entry.name}:</span>
-          <span className="font-medium text-gray-100">{entry.value} postings</span>
+        <div key={entry.name} className="flex items-center justify-between gap-4 text-xs py-0.5">
+          <div className="flex items-center gap-2">
+            <div
+              className="w-2.5 h-2.5 rounded-sm"
+              style={{ background: entry.color }}
+            />
+            <span className="text-gray-400">{entry.name}</span>
+          </div>
+          <span className="font-semibold text-gray-100">{entry.value}</span>
         </div>
       ))}
     </div>
@@ -60,20 +62,18 @@ const DEMO_GAP_DATA: SkillGapChartItem[] = [
 ];
 
 export default function SkillGapChart({ sector = "all", limit = 10 }: Props) {
-  const [data, setData] = useState<SkillGapChartItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<SkillGapChartItem[]>(() => DEMO_GAP_DATA.slice(0, limit));
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = async () => {
-    setLoading(true);
-    setError(null);
     try {
       const res = await api.dashboard.getGapAnalysis(sector, limit);
-      setData(res.chart_data && res.chart_data.length > 0 ? res.chart_data : DEMO_GAP_DATA.slice(0, limit));
+      if (res.chart_data && res.chart_data.length > 0) {
+        setData(res.chart_data);
+      }
     } catch {
-      setData(DEMO_GAP_DATA.slice(0, limit));
-    } finally {
-      setLoading(false);
+      // Fallback is already loaded
     }
   };
 
@@ -81,7 +81,7 @@ export default function SkillGapChart({ sector = "all", limit = 10 }: Props) {
 
   if (loading) {
     return (
-      <div className="glass rounded-2xl p-6 h-80 flex items-center justify-center">
+      <div className="glass-elevated rounded-2xl p-6 h-80 flex items-center justify-center">
         <div className="flex items-center gap-3 text-gray-400">
           <RefreshCw size={18} className="animate-spin text-violet-400" />
           <span className="text-sm">Loading skill gap data...</span>
@@ -92,7 +92,7 @@ export default function SkillGapChart({ sector = "all", limit = 10 }: Props) {
 
   if (error) {
     return (
-      <div className="glass rounded-2xl p-6 h-80 flex items-center justify-center">
+      <div className="glass-elevated rounded-2xl p-6 h-80 flex items-center justify-center">
         <div className="text-center">
           <AlertCircle size={32} className="text-red-400 mx-auto mb-2" />
           <p className="text-sm text-gray-400">{error}</p>
@@ -108,12 +108,7 @@ export default function SkillGapChart({ sector = "all", limit = 10 }: Props) {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="glass rounded-2xl p-6"
-    >
+    <div className="glass-elevated rounded-2xl p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
@@ -128,7 +123,7 @@ export default function SkillGapChart({ sector = "all", limit = 10 }: Props) {
           </p>
         </div>
         {/* Legend */}
-        <div className="flex items-center gap-4">
+        <div className="hidden sm:flex items-center gap-4">
           {Object.entries(SECTOR_COLORS).map(([name, color]) => (
             <div key={name} className="flex items-center gap-1.5">
               <div className="w-3 h-3 rounded-sm" style={{ background: color }} />
@@ -171,15 +166,17 @@ export default function SkillGapChart({ sector = "all", limit = 10 }: Props) {
             fill={SECTOR_COLORS["Private Sector"]}
             radius={[4, 4, 0, 0]}
             maxBarSize={36}
+            isAnimationActive={false}
           />
           <Bar
             dataKey="Government"
             fill={SECTOR_COLORS["Government"]}
             radius={[4, 4, 0, 0]}
             maxBarSize={36}
+            isAnimationActive={false}
           />
         </BarChart>
       </ResponsiveContainer>
-    </motion.div>
+    </div>
   );
 }

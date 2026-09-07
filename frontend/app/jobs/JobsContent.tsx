@@ -64,7 +64,7 @@ function JobCard({ job }: { job: JobPosting }) {
   const isGovt = job.sector_type === "GOVERNMENT";
 
   return (
-    <div className="glass glass-hover rounded-2xl p-6 flex flex-col justify-between border border-white/[0.07] hover:border-violet-500/30 transition-all duration-200">
+    <div className="glass glass-hover rounded-2xl p-6 flex flex-col justify-between transition-all duration-200">
       <div>
         <div className="flex items-start justify-between gap-3 mb-2">
           <div className="flex-1 min-w-0">
@@ -83,7 +83,7 @@ function JobCard({ job }: { job: JobPosting }) {
                 </span>
               )}
             </div>
-            <h3 className="text-base font-bold text-white group-hover:text-violet-300 transition-colors truncate">
+            <h3 className="text-base font-bold text-white transition-colors truncate">
               {job.title}
             </h3>
             <p className="text-xs text-gray-400 font-medium mt-0.5">{job.company}</p>
@@ -117,7 +117,7 @@ function JobCard({ job }: { job: JobPosting }) {
         )}
       </div>
 
-      <div className="flex items-center justify-between pt-3.5 border-t border-white/5">
+      <div className="flex items-center justify-between pt-3.5 border-t border-white/[0.06]">
         <span className="text-[11px] text-gray-500 capitalize">
           Via {job.source}
         </span>
@@ -126,7 +126,7 @@ function JobCard({ job }: { job: JobPosting }) {
             href={job.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-semibold transition-all shadow-sm"
+            className="btn-primary text-xs px-3.5 py-1.5"
           >
             <span>Apply Now</span>
             <ExternalLink className="w-3 h-3" />
@@ -172,11 +172,11 @@ export default function JobsContent() {
       {/* Stats row */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         {[
-          { label: "Total Openings", value: MOCK_JOBS.length, icon: Briefcase, color: "text-violet-400", bg: "bg-violet-600/10 border-violet-500/20" },
-          { label: "Private Sector", value: privateCount, icon: Building2, color: "text-violet-300", bg: "bg-violet-600/10 border-violet-500/20" },
-          { label: "Government / PSU", value: govtCount, icon: Shield, color: "text-emerald-400", bg: "bg-emerald-500/10 border-emerald-500/20" },
-        ].map(({ label, value, icon: Icon, color, bg }) => (
-          <div key={label} className="glass rounded-2xl p-5 border border-white/[0.08] flex items-center gap-4">
+          { label: "Total Openings", value: MOCK_JOBS.length, icon: Briefcase, color: "text-violet-400", bg: "bg-violet-600/10 border-violet-500/20", accent: "accent-left-violet" },
+          { label: "Private Sector", value: privateCount, icon: Building2, color: "text-violet-300", bg: "bg-violet-600/10 border-violet-500/20", accent: "accent-left-violet" },
+          { label: "Government / PSU", value: govtCount, icon: Shield, color: "text-emerald-400", bg: "bg-emerald-500/10 border-emerald-500/20", accent: "accent-left-emerald" },
+        ].map(({ label, value, icon: Icon, color, bg, accent }) => (
+          <div key={label} className={`glass-elevated rounded-2xl p-5 flex items-center gap-4 ${accent}`}>
             <div className={`w-12 h-12 rounded-xl flex items-center justify-center border shrink-0 ${bg}`}>
               <Icon className={`w-6 h-6 ${color}`} />
             </div>
@@ -189,7 +189,7 @@ export default function JobsContent() {
       </div>
 
       {/* Filter Bar */}
-      <div className="flex flex-wrap gap-3 mb-6 items-center justify-between glass p-3 rounded-2xl border border-white/[0.08]">
+      <div className="flex flex-wrap gap-3 mb-6 items-center justify-between glass-elevated p-3.5 rounded-2xl">
         <div className="flex flex-wrap gap-2 items-center">
           {/* Sector filter */}
           <div className="flex gap-1.5 p-1 bg-white/[0.03] rounded-xl border border-white/5">
@@ -238,13 +238,13 @@ export default function JobsContent() {
 
       {/* Job Grid */}
       {filtered.length === 0 ? (
-        <div className="text-center py-20 glass rounded-2xl border border-white/10 p-8">
+        <div className="text-center py-20 glass-elevated rounded-2xl p-8">
           <Briefcase className="w-12 h-12 text-violet-400/40 mx-auto mb-4" />
           <p className="text-gray-200 text-base font-semibold">No job vacancies match your selected filters.</p>
           <p className="text-gray-500 text-xs mt-1">Try resetting the state or sector filter.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filtered.map(job => <JobCard key={job.id} job={job} />)}
         </div>
       )}

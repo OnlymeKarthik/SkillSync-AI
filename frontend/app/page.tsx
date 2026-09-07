@@ -19,14 +19,19 @@ import {
 export default function HomePage() {
   return (
     <div className="relative overflow-hidden">
+      {/* Floating gradient orbs for hero depth */}
+      <div className="absolute top-20 left-1/4 w-96 h-96 bg-violet-600/8 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-40 right-1/4 w-80 h-80 bg-blue-600/6 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-60 left-1/2 w-72 h-72 bg-emerald-600/5 rounded-full blur-3xl pointer-events-none" />
+
       {/* Hero Section */}
-      <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 pb-16 text-center">
+      <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 pb-20 text-center">
         {/* Badge */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="inline-flex items-center gap-2 glass border border-violet-500/25 rounded-full px-4 py-1.5 text-xs sm:text-sm text-violet-300 mb-6 shadow-lg shadow-violet-500/10"
+          className="inline-flex items-center gap-2 glass-elevated border border-violet-500/25 rounded-full px-4 py-1.5 text-xs sm:text-sm text-violet-300 mb-8 shadow-lg shadow-violet-500/10"
         >
           <span className="w-1.5 h-1.5 bg-violet-400 rounded-full pulse-glow" />
           <span>Smart India Hackathon 2026 · Team Fantastic Six</span>
@@ -37,7 +42,7 @@ export default function HomePage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.15] mb-6 max-w-5xl mx-auto"
+          className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.1] mb-6 max-w-5xl mx-auto"
         >
           Bridge the Gap Between{" "}
           <span className="gradient-text">Academia & Industry</span>
@@ -48,7 +53,7 @@ export default function HomePage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-base sm:text-xl text-gray-400 max-w-3xl mx-auto mb-10 leading-relaxed font-normal"
+          className="text-base sm:text-xl text-gray-400 max-w-3xl mx-auto mb-12 leading-relaxed font-normal"
         >
           Vidyavani analyses real-time job postings from private tech giants and government portals,
           maps them against NSQF curricula using Knowledge Graphs, and tells you{" "}
@@ -64,7 +69,7 @@ export default function HomePage() {
         >
           <Link
             href="/onboarding"
-            className="flex items-center gap-2 px-6 py-3.5 bg-violet-600 hover:bg-violet-500 text-white font-semibold rounded-xl transition-all duration-200 hover:shadow-xl hover:shadow-violet-500/30 active:scale-95"
+            className="btn-primary px-7 py-3.5 text-base rounded-xl"
           >
             <FileText size={18} />
             <span>Upload Your Resume</span>
@@ -72,7 +77,7 @@ export default function HomePage() {
           </Link>
           <Link
             href="/dashboard"
-            className="flex items-center gap-2 px-6 py-3.5 glass border border-white/10 hover:border-violet-500/40 text-gray-200 hover:text-white font-semibold rounded-xl transition-all duration-200 hover:bg-white/[0.06] active:scale-95"
+            className="btn-secondary px-7 py-3.5 text-base rounded-xl"
           >
             <BarChart3 size={18} />
             <span>View Skill Gap Dashboard</span>
@@ -81,10 +86,10 @@ export default function HomePage() {
 
         {/* Stats row */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mt-16 p-6 rounded-2xl glass border border-white/[0.07]"
+          className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mt-20 p-6 rounded-2xl glass-elevated"
         >
           {[
             { value: "1.5Cr+", label: "NSQF graduates/year" },
@@ -100,36 +105,39 @@ export default function HomePage() {
         </motion.div>
       </section>
 
+      {/* Section Divider */}
+      <div className="section-divider" />
+
       {/* Features Grid */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 border-t border-white/[0.06]">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-violet-500/10 border border-violet-500/25 text-violet-300 mb-3">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
+        <div className="text-center mb-14">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-violet-500/10 border border-violet-500/25 text-violet-300 mb-4">
             <Sparkles size={13} />
             <span>Integrated AI Intelligence</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4 tracking-tight">
             Everything You Need To Bridge The Skill Gap
           </h2>
-          <p className="text-sm sm:text-base text-gray-400 max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base text-gray-400 max-w-2xl mx-auto leading-relaxed">
             Powered by Neo4j Knowledge Graphs, Microsoft GraphRAG, and LangGraph multi-agent orchestration.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {FEATURES.map((feat, i) => (
             <motion.div
               key={feat.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.35, delay: i * 0.05 }}
+              transition={{ duration: 0.35, delay: i * 0.06 }}
             >
               <Link
                 href={feat.href}
-                className="group flex flex-col justify-between glass glass-hover rounded-2xl p-6 h-full border border-white/[0.07] hover:border-violet-500/30"
+                className="group flex flex-col justify-between glass glass-hover rounded-2xl p-6 h-full"
               >
                 <div>
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between mb-5">
                     <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${feat.color} shadow-lg`}>
                       <feat.icon size={20} className="text-white" />
                     </div>
@@ -146,7 +154,7 @@ export default function HomePage() {
                     {feat.description}
                   </p>
                 </div>
-                <div className="mt-5 pt-4 border-t border-white/[0.05] flex items-center text-xs font-semibold text-violet-400 group-hover:text-violet-300 gap-1">
+                <div className="mt-5 pt-4 border-t border-white/[0.06] flex items-center text-xs font-semibold text-violet-400 group-hover:text-violet-300 gap-1">
                   <span>Explore feature</span>
                   <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
                 </div>
@@ -156,18 +164,21 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Section Divider */}
+      <div className="section-divider" />
+
       {/* Who is it for */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 border-t border-white/[0.06]">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3 tracking-tight">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
+        <div className="text-center mb-14">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4 tracking-tight">
             Built For India&apos;s Workforce Ecosystem
           </h2>
-          <p className="text-sm sm:text-base text-gray-400 max-w-xl mx-auto">
+          <p className="text-sm sm:text-base text-gray-400 max-w-xl mx-auto leading-relaxed">
             Targeting every key stakeholder from vocational trainees to policy makers.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {USER_TYPES.map((u, i) => (
             <motion.div
               key={u.title}
@@ -175,13 +186,13 @@ export default function HomePage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.35, delay: i * 0.08 }}
-              className="glass rounded-2xl p-7 border border-white/[0.07] flex flex-col justify-between"
+              className="glass glass-hover rounded-2xl p-7 flex flex-col justify-between"
             >
               <div>
-                <div className="text-3xl mb-4 p-3 w-fit rounded-xl bg-white/[0.04] border border-white/[0.08]">
+                <div className="text-3xl mb-5 p-3 w-fit rounded-xl bg-white/[0.04] border border-white/[0.08]">
                   {u.emoji}
                 </div>
-                <h3 className="text-xl font-bold text-gray-100 mb-2.5">{u.title}</h3>
+                <h3 className="text-xl font-bold text-gray-100 mb-3">{u.title}</h3>
                 <p className="text-sm text-gray-400 leading-relaxed">{u.description}</p>
               </div>
             </motion.div>

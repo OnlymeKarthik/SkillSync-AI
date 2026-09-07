@@ -7,7 +7,7 @@ import { BarChart3, Building2, Shield } from "lucide-react";
 
 export default function DashboardContent() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10 flex flex-col gap-8">
       {/* Standard Page Header */}
       <PageHeader
         badge={{
@@ -29,19 +29,16 @@ export default function DashboardContent() {
       />
 
       {/* KPI Cards */}
-      <div className="mb-8 md:mb-10">
-        <StatsCards />
-      </div>
+      <StatsCards />
 
       {/* Main Overall Gap Chart */}
-      <div className="mb-8 md:mb-10">
-        <SkillGapChart sector="all" limit={10} />
-      </div>
+      <SkillGapChart sector="all" limit={10} />
 
       {/* Split: Private vs Govt */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
         <div>
-          <div className="flex items-center gap-2 mb-3 px-1">
+          <div className="flex items-center gap-2.5 mb-4 px-1">
+            <div className="w-1 h-5 rounded-full bg-violet-500" />
             <Building2 size={16} className="text-violet-400" />
             <h3 className="text-sm font-semibold text-gray-200 uppercase tracking-wider">
               Private Sector High-Demand Gaps
@@ -51,7 +48,8 @@ export default function DashboardContent() {
         </div>
 
         <div>
-          <div className="flex items-center gap-2 mb-3 px-1">
+          <div className="flex items-center gap-2.5 mb-4 px-1">
+            <div className="w-1 h-5 rounded-full bg-emerald-500" />
             <Shield size={16} className="text-emerald-400" />
             <h3 className="text-sm font-semibold text-gray-200 uppercase tracking-wider">
               Government Sector High-Demand Gaps

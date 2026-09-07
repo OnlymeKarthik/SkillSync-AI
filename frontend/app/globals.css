@@ -10,6 +10,26 @@
   --brand-accent: 16 185 129;     /* emerald-500 */
   --brand-danger: 239 68 68;      /* red-500 */
   --brand-warning: 245 158 11;    /* amber-500 */
+
+  /* Spacing Tokens */
+  --space-page-x: 1rem;
+  --space-section-y: 4rem;
+  --radius-card: 1rem;
+  --radius-btn: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --space-page-x: 1.5rem;
+    --space-section-y: 5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --space-page-x: 2rem;
+    --space-section-y: 6rem;
+  }
 }
 
 * {
@@ -20,6 +40,7 @@
 
 html {
   scroll-behavior: smooth;
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -35,8 +56,8 @@ body {
   max-width: 80rem; /* max-w-7xl */
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: var(--space-page-x);
+  padding-right: var(--space-page-x);
   padding-top: 2rem;
   padding-bottom: 4rem;
   width: 100%;
@@ -44,16 +65,7 @@ body {
 
 @media (min-width: 640px) {
   .page-container {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
     padding-top: 2.5rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .page-container {
-    padding-left: 2rem;
-    padding-right: 2rem;
   }
 }
 
@@ -61,8 +73,8 @@ body {
   max-width: 64rem; /* max-w-5xl */
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: var(--space-page-x);
+  padding-right: var(--space-page-x);
   padding-top: 2rem;
   padding-bottom: 4rem;
   width: 100%;
@@ -70,8 +82,6 @@ body {
 
 @media (min-width: 640px) {
   .page-container-narrow {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
     padding-top: 2.5rem;
   }
 }
@@ -84,23 +94,146 @@ body {
 }
 
 /* =====================================================================
-   Glass morphism card utility
+   Glass morphism card utilities
    ===================================================================== */
 .glass {
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.glass-elevated {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.35),
+    0 1px 3px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .glass-hover {
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .glass-hover:hover {
   background: rgba(255, 255, 255, 0.06);
   border-color: rgba(139, 92, 246, 0.3);
   transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.15);
+  box-shadow:
+    0 12px 40px rgba(139, 92, 246, 0.12),
+    0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* =====================================================================
+   Button utilities
+   ===================================================================== */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background: #7c3aed;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border-radius: var(--radius-btn);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3);
+}
+.btn-primary:hover {
+  background: #6d28d9;
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
+  transform: translateY(-1px);
+}
+.btn-primary:active {
+  transform: scale(0.97);
+}
+.btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background: rgba(255, 255, 255, 0.04);
+  color: #d1d5db;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border-radius: var(--radius-btn);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(139, 92, 246, 0.4);
+  color: #ffffff;
+}
+.btn-secondary:active {
+  transform: scale(0.97);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  background: transparent;
+  color: #9ca3af;
+  font-weight: 600;
+  font-size: 0.75rem;
+  border-radius: var(--radius-btn);
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+}
+
+/* =====================================================================
+   Input field utility
+   ===================================================================== */
+.input-field {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: var(--radius-btn);
+  padding: 0.625rem 0.875rem;
+  color: #ffffff;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+.input-field::placeholder {
+  color: #6b7280;
+}
+.input-field:focus {
+  outline: none;
+  border-color: rgba(139, 92, 246, 0.5);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* =====================================================================
+   Focus ring — apply to interactive elements
+   ===================================================================== */
+.focus-ring:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #030712, 0 0 0 4px rgba(139, 92, 246, 0.5);
 }
 
 /* =====================================================================
@@ -135,6 +268,22 @@ body {
 }
 
 /* =====================================================================
+   Section divider — gradient line between sections
+   ===================================================================== */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(139, 92, 246, 0.2) 20%,
+    rgba(59, 130, 246, 0.15) 50%,
+    rgba(139, 92, 246, 0.2) 80%,
+    transparent 100%
+  );
+  border: none;
+}
+
+/* =====================================================================
    Skill badge
    ===================================================================== */
 .skill-badge {
@@ -152,6 +301,7 @@ body {
 }
 .skill-badge:hover {
   background: rgba(139, 92, 246, 0.2);
+  transform: translateY(-1px);
 }
 .skill-badge.gap {
   background: rgba(239, 68, 68, 0.1);
@@ -165,6 +315,25 @@ body {
 }
 
 /* =====================================================================
+   Accent border utility (left-colored stripe on cards)
+   ===================================================================== */
+.accent-left-violet {
+  border-left: 3px solid #8b5cf6;
+}
+.accent-left-blue {
+  border-left: 3px solid #3b82f6;
+}
+.accent-left-emerald {
+  border-left: 3px solid #10b981;
+}
+.accent-left-red {
+  border-left: 3px solid #ef4444;
+}
+.accent-left-amber {
+  border-left: 3px solid #f59e0b;
+}
+
+/* =====================================================================
    Scrollbar styling
    ===================================================================== */
 ::-webkit-scrollbar {
@@ -175,16 +344,18 @@ body {
   background: #090d16;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1f293d;
+  background: #1e2438;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #374151;
+  background: #2d3548;
 }
 
 /* =====================================================================
-   Loading pulse animation
+   Animations
    ===================================================================== */
+
+/* Pulse glow */
 @keyframes pulse-glow {
   0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(139, 92, 246, 0.4); }
   50% { opacity: 0.7; box-shadow: 0 0 20px rgba(139, 92, 246, 0.8); }
@@ -193,9 +364,7 @@ body {
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
-/* =====================================================================
-   SSE stream typing cursor
-   ===================================================================== */
+/* SSE stream typing cursor */
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
@@ -204,4 +373,70 @@ body {
   content: "▋";
   animation: blink 1s step-end infinite;
   color: #8b5cf6;
+}
+
+/* Shimmer skeleton */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 25%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 0.5rem;
+}
+
+/* Typing dots for chat */
+@keyframes typing-bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+.typing-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #8b5cf6;
+  animation: typing-bounce 1.2s ease-in-out infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.15s; }
+.typing-dot:nth-child(3) { animation-delay: 0.3s; }
+
+/* Fade-in-up for page sections */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s ease-out both;
+}
+
+/* Animated dashed border for upload zone */
+@keyframes dash-march {
+  to { stroke-dashoffset: -12; }
+}
+
+/* Noise texture overlay */
+.noise-overlay::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.015;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
 }

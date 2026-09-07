@@ -138,12 +138,12 @@ function StageCard({ item, index }: { item: RoadmapItem; index: number }) {
     return (
       <div className="flex gap-4 my-6">
         <div className="flex flex-col items-center">
-          <div className="w-10 h-10 rounded-full bg-violet-600/20 border-2 border-violet-500/50 flex items-center justify-center flex-shrink-0">
+          <div className="w-10 h-10 rounded-full bg-violet-600/20 border-2 border-dashed border-violet-500/50 flex items-center justify-center flex-shrink-0">
             <GitBranch className="w-4 h-4 text-violet-300" />
           </div>
-          <div className="w-0.5 flex-1 bg-gradient-to-b from-violet-500/50 to-white/10 my-1" />
+          <div className="w-0.5 flex-1 my-1" style={{ background: 'linear-gradient(to bottom, rgba(139,92,246,0.5), rgba(255,255,255,0.1))' }} />
         </div>
-        <div className="flex-1 glass border border-violet-500/20 rounded-2xl p-5 mb-4">
+        <div className="flex-1 glass-elevated border border-violet-500/20 rounded-2xl p-5 mb-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-xs font-semibold text-violet-300 uppercase tracking-wider">Branch Point</span>
           </div>
@@ -189,12 +189,12 @@ function StageCard({ item, index }: { item: RoadmapItem; index: number }) {
         <div className="w-10 h-10 rounded-full bg-violet-600 flex items-center justify-center text-white text-sm font-bold flex-shrink-0 shadow-md shadow-violet-600/30">
           {stage.stage}
         </div>
-        <div className="w-0.5 flex-1 bg-white/10 my-1" />
+        <div className="w-0.5 flex-1 my-1" style={{ background: 'linear-gradient(to bottom, rgba(139,92,246,0.4), rgba(255,255,255,0.08))' }} />
       </div>
 
       <div className="flex-1 pb-8">
         <div
-          className="glass glass-hover border border-white/[0.08] rounded-2xl overflow-hidden cursor-pointer"
+          className="glass-elevated glass-hover rounded-2xl overflow-hidden cursor-pointer"
           onClick={() => setExpanded(!expanded)}
         >
           <div className="flex items-center justify-between p-5">
@@ -347,7 +347,7 @@ function RoadmapInner() {
       />
 
       {/* Generator Input Card */}
-      <div className="glass border border-white/10 rounded-2xl p-5 mb-8">
+      <div className="glass-elevated rounded-2xl p-5 mb-8">
         <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-2.5">
           Enter Your Target Career Or Skill
         </p>
@@ -359,13 +359,13 @@ function RoadmapInner() {
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === "Enter" && handleGenerate()}
             placeholder="e.g., Full Stack Developer, Data Scientist, DevOps Engineer, Cloud Architect..."
-            className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-violet-500/50 text-sm transition-all"
+            className="input-field flex-1 py-3"
           />
           <button
             id="generate-roadmap"
             onClick={handleGenerate}
             disabled={loading || !input.trim()}
-            className="flex items-center justify-center gap-2 px-6 py-3 bg-violet-600 hover:bg-violet-500 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl font-semibold text-sm transition-all shadow-md shadow-violet-600/20 shrink-0"
+            className="btn-primary px-6 py-3 shrink-0"
           >
             {loading ? (
               <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -403,10 +403,10 @@ function RoadmapInner() {
       {loading && (
         <div className="space-y-4">
           {[1, 2, 3].map(i => (
-            <div key={i} className="glass rounded-2xl p-5 animate-pulse border border-white/5">
-              <div className="h-4 bg-white/10 rounded w-1/3 mb-3" />
-              <div className="h-3 bg-white/10 rounded w-full mb-2" />
-              <div className="h-3 bg-white/10 rounded w-2/3" />
+            <div key={i} className="glass rounded-2xl p-5 border border-white/5">
+              <div className="h-4 skeleton-shimmer w-1/3 mb-3" />
+              <div className="h-3 skeleton-shimmer w-full mb-2" />
+              <div className="h-3 skeleton-shimmer w-2/3" />
             </div>
           ))}
         </div>
@@ -422,7 +422,7 @@ function RoadmapInner() {
               { label: "Learning Hours", value: `~${totalHours}h`, icon: BookOpen },
               { label: "Stages", value: `${roadmap.filter(r => !r.is_decision_point).length}`, icon: Zap },
             ].map(({ label, value, icon: Icon }) => (
-              <div key={label} className="glass rounded-2xl p-4 text-center border border-white/[0.07]">
+              <div key={label} className="glass-elevated rounded-2xl p-4 text-center">
                 <Icon className="w-5 h-5 text-violet-400 mx-auto mb-1.5" />
                 <p className="text-xl sm:text-2xl font-bold text-white mb-0.5">{value}</p>
                 <p className="text-xs text-gray-400 font-medium">{label}</p>
@@ -438,7 +438,7 @@ function RoadmapInner() {
           </div>
 
           {/* CTA Box */}
-          <div className="p-6 glass border border-violet-500/25 rounded-2xl text-center">
+           <div className="p-6 glass-elevated border border-violet-500/25 rounded-2xl text-center">
             <h3 className="text-white font-bold text-base sm:text-lg mb-1">
               Have questions about this roadmap?
             </h3>
@@ -447,7 +447,7 @@ function RoadmapInner() {
             </p>
             <Link
               href="/chat"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-violet-600 hover:bg-violet-500 text-white rounded-xl text-sm font-semibold transition-all shadow-lg shadow-violet-600/25"
+              className="btn-primary"
             >
               <Wand2 className="w-4 h-4" />
               <span>Talk to AI Career Advisor</span>
