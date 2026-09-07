@@ -103,6 +103,9 @@ export interface JobPosting {
   experience_max: number | null;
   url: string | null;
   posted_at: string | null;
+  required_skills?: string[];
+  nsqf_level?: number;
+  description?: string;
 }
 
 // =============================================================================

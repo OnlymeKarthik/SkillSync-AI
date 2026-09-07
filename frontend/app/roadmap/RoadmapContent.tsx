@@ -2,11 +2,12 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   Wand2, Play, ChevronDown, ChevronRight, BookOpen,
-  Clock, Star, ExternalLink, GitBranch, Zap, Globe
+  Clock, Star, ExternalLink, GitBranch, Zap, Globe, Map
 } from "lucide-react";
-import Navbar from "@/components/layout/Navbar";
+import PageHeader from "@/components/layout/PageHeader";
 
 interface Resource {
   name: string;
@@ -69,84 +70,108 @@ const DEMO_ROADMAP: RoadmapItem[] = [
   },
   {
     stage: 2,
-    is_decision_point: true,
-    question: "What's your primary goal?",
-    options: [
-      { label: "Web Development (Full Stack)", next_skills: ["React", "Node.js", "PostgreSQL"] },
-      { label: "Data & AI (ML/DS)", next_skills: ["Pandas", "NumPy", "Scikit-learn"] },
-    ],
-  },
-  {
-    stage: 3,
-    title: "Core Skills",
-    duration_weeks: 8,
-    skills: ["React.js", "Node.js", "REST APIs", "PostgreSQL", "Docker Basics"],
-    description: "Learn the core technologies of your chosen path. Build real projects and a portfolio that demonstrates practical capability to employers.",
+    title: "Core Competencies",
+    duration_weeks: 6,
+    skills: ["Data Structures & Algorithms", "SQL & Databases", "REST APIs", "FastAPI / Flask"],
+    description: "Learn to design APIs, query relational databases, and write efficient algorithms. This stage bridges basic coding to production-ready engineering.",
     resources: [
-      { name: "Full Stack Open", url: "https://fullstackopen.com", type: "free", platform: "freeCodeCamp", duration_hrs: 60 },
-      { name: "NPTEL: Web Technologies", url: "https://nptel.ac.in", type: "free", platform: "NPTEL", duration_hrs: 30 },
-      { name: "The Complete Web Developer", url: "https://udemy.com", type: "paid", platform: "Udemy", duration_hrs: 54 },
+      { name: "Database Management Systems", url: "https://nptel.ac.in", type: "free", platform: "NPTEL", duration_hrs: 30 },
+      { name: "FastAPI Full Course", url: "https://youtube.com", type: "free", platform: "YouTube", duration_hrs: 6 },
+      { name: "Master the Coding Interview", url: "https://udemy.com", type: "paid", platform: "Udemy", duration_hrs: 20 },
     ],
-    milestone: "Deploy a full-stack CRUD application with auth",
+    milestone: "Build a CRUD REST API backed by PostgreSQL and deploy it",
     is_decision_point: false,
   },
   {
-    stage: 4,
-    title: "Advanced & Specialisation",
-    duration_weeks: 6,
-    skills: ["System Design", "Cloud (AWS/GCP)", "CI/CD", "Performance Tuning"],
-    description: "Go beyond basics. Learn how senior engineers think — scalability, system design, and production-grade deployment. This stage separates you from juniors.",
-    resources: [
-      { name: "System Design Primer", url: "https://github.com", type: "free", platform: "YouTube", duration_hrs: 20 },
-      { name: "AWS Cloud Practitioner", url: "https://aws.amazon.com", type: "paid", platform: "Coursera", duration_hrs: 15 },
-      { name: "DevOps Essentials — NPTEL", url: "https://nptel.ac.in", type: "free", platform: "NPTEL", duration_hrs: 25 },
+    stage: 3,
+    is_decision_point: true,
+    question: "Choose your specialization path:",
+    options: [
+      {
+        label: "AI / ML Track",
+        next_skills: ["NumPy", "Pandas", "Scikit-Learn", "PyTorch", "Hugging Face"],
+      },
+      {
+        label: "Full Stack Track",
+        next_skills: ["React / Next.js", "TypeScript", "TailwindCSS", "Node.js"],
+      },
+      {
+        label: "DevOps & Cloud Track",
+        next_skills: ["Docker", "Kubernetes", "AWS / GCP", "Terraform", "CI/CD"],
+      },
     ],
-    milestone: "Deploy app to AWS with CI/CD pipeline and monitoring",
+  },
+  {
+    stage: 4,
+    title: "Advanced Specialization",
+    duration_weeks: 8,
+    skills: ["Docker & Containerization", "Cloud Deployment (AWS/GCP)", "System Design", "Testing & CI/CD"],
+    description: "Package your applications into Docker containers, deploy to cloud providers, and understand microservice architectures and scalability patterns.",
+    resources: [
+      { name: "Cloud Computing Fundamentals", url: "https://nptel.ac.in", type: "free", platform: "NPTEL", duration_hrs: 25 },
+      { name: "Docker & Kubernetes Complete Guide", url: "https://udemy.com", type: "paid", platform: "Udemy", duration_hrs: 22 },
+      { name: "System Design Primer", url: "https://github.com", type: "free", platform: "YouTube", duration_hrs: 10 },
+    ],
+    milestone: "Deploy a containerized full-stack application with automated CI/CD pipeline",
     is_decision_point: false,
   },
   {
     stage: 5,
-    title: "Job-Ready",
-    duration_weeks: 3,
-    skills: ["Portfolio Polish", "Interview Prep", "Resume Optimisation", "LeetCode 75"],
-    description: "Prepare for interviews and land your first role. Focus on your portfolio, DSA practice, and mock interviews. Most candidates skip this — don't.",
+    title: "Job-Ready & Portfolio",
+    duration_weeks: 4,
+    skills: ["Portfolio Project", "Resume Optimization", "Mock Interviews", "Open Source Contribution"],
+    description: "Consolidate your learning into 2 capstone portfolio projects. Polish your GitHub profile, optimize your resume for ATS systems, and prepare for technical interviews.",
     resources: [
-      { name: "LeetCode 75 Study Plan", url: "https://leetcode.com", type: "free", platform: "LeetCode", duration_hrs: 30 },
-      { name: "Resume Building Workshop", url: "https://swayam.gov.in", type: "free", platform: "SWAYAM", duration_hrs: 5 },
+      { name: "Open Source Contribution Guide", url: "https://freecodecamp.org", type: "free", platform: "freeCodeCamp", duration_hrs: 8 },
+      { name: "Tech Interview Handbook", url: "https://techinterviewhandbook.org", type: "free", platform: "LeetCode", duration_hrs: 20 },
     ],
-    milestone: "Apply to 50 jobs with a polished portfolio and 3 mock interviews done",
+    milestone: "2 production-quality projects live on GitHub + verified NSQF competency badge",
     is_decision_point: false,
   },
 ];
 
 function StageCard({ item, index }: { item: RoadmapItem; index: number }) {
   const [expanded, setExpanded] = useState(index === 0);
+  const [selectedOption, setSelectedOption] = useState(0);
 
   if (item.is_decision_point) {
     return (
-      <div className="relative flex gap-4">
+      <div className="flex gap-4 my-6">
         <div className="flex flex-col items-center">
-          <div className="w-10 h-10 rounded-full bg-amber-500/20 border-2 border-amber-500/40 flex items-center justify-center z-10">
-            <GitBranch className="w-4 h-4 text-amber-400" />
+          <div className="w-10 h-10 rounded-full bg-violet-600/20 border-2 border-violet-500/50 flex items-center justify-center flex-shrink-0">
+            <GitBranch className="w-4 h-4 text-violet-300" />
           </div>
-          <div className="w-0.5 flex-1 bg-gradient-to-b from-amber-500/30 to-transparent mt-2" />
+          <div className="w-0.5 flex-1 bg-gradient-to-b from-violet-500/50 to-white/10 my-1" />
         </div>
-        <div className="flex-1 pb-8">
-          <div className="glass border border-amber-500/20 rounded-2xl p-5">
-            <p className="text-xs text-amber-400 font-medium uppercase tracking-wider mb-2">Decision Point</p>
-            <h3 className="text-white font-semibold text-lg mb-4">{item.question}</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {item.options.map((opt, i) => (
-                <button key={i} className="text-left p-4 rounded-xl border border-white/10 hover:border-violet-500/40 hover:bg-violet-500/10 transition-all group">
-                  <p className="text-white font-medium text-sm mb-2 group-hover:text-violet-300">{opt.label}</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {opt.next_skills.map(s => (
-                      <span key={s} className="text-xs text-gray-400 bg-white/5 px-2 py-0.5 rounded">{s}</span>
-                    ))}
-                  </div>
-                </button>
-              ))}
-            </div>
+        <div className="flex-1 glass border border-violet-500/20 rounded-2xl p-5 mb-4">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-xs font-semibold text-violet-300 uppercase tracking-wider">Branch Point</span>
+          </div>
+          <h4 className="text-base font-bold text-white mb-4">{item.question}</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {item.options.map((opt, i) => (
+              <button
+                key={i}
+                onClick={() => setSelectedOption(i)}
+                className={`p-3.5 rounded-xl border text-left transition-all ${
+                  selectedOption === i
+                    ? "bg-violet-600/20 border-violet-500 text-white shadow-md shadow-violet-600/20"
+                    : "bg-white/[0.02] border-white/10 text-gray-400 hover:border-white/20 hover:text-gray-200"
+                }`}
+              >
+                <p className="font-semibold text-sm mb-1.5">{opt.label}</p>
+                <div className="flex flex-wrap gap-1">
+                  {opt.next_skills.slice(0, 3).map(s => (
+                    <span key={s} className="text-[10px] bg-white/5 px-1.5 py-0.5 rounded text-gray-300 font-mono">
+                      {s}
+                    </span>
+                  ))}
+                  {opt.next_skills.length > 3 && (
+                    <span className="text-[10px] text-gray-500">+{opt.next_skills.length - 3}</span>
+                  )}
+                </div>
+              </button>
+            ))}
           </div>
         </div>
       </div>
@@ -158,59 +183,65 @@ function StageCard({ item, index }: { item: RoadmapItem; index: number }) {
   const paidResources = stage.resources.filter(r => r.type === "paid");
 
   return (
-    <div className="relative flex gap-4">
+    <div className="flex gap-4">
+      {/* Node indicator */}
       <div className="flex flex-col items-center">
-        <div className="w-10 h-10 rounded-full bg-violet-500/20 border-2 border-violet-500/40 flex items-center justify-center z-10 text-sm font-bold text-violet-300">
+        <div className="w-10 h-10 rounded-full bg-violet-600 flex items-center justify-center text-white text-sm font-bold flex-shrink-0 shadow-md shadow-violet-600/30">
           {stage.stage}
         </div>
-        {index < DEMO_ROADMAP.length - 1 && (
-          <div className="w-0.5 flex-1 bg-gradient-to-b from-violet-500/30 to-violet-500/10 mt-2" />
-        )}
+        <div className="w-0.5 flex-1 bg-white/10 my-1" />
       </div>
 
       <div className="flex-1 pb-8">
         <div
-          className="glass glass-hover border border-white/8 rounded-2xl overflow-hidden cursor-pointer"
+          className="glass glass-hover border border-white/[0.08] rounded-2xl overflow-hidden cursor-pointer"
           onClick={() => setExpanded(!expanded)}
         >
           <div className="flex items-center justify-between p-5">
             <div className="flex-1">
-              <div className="flex items-center gap-3 mb-1">
-                <h3 className="text-white font-semibold">{stage.title}</h3>
-                <div className="flex items-center gap-1 text-xs text-gray-500">
+              <div className="flex items-center gap-3 mb-1.5">
+                <h3 className="text-white font-bold text-base sm:text-lg">{stage.title}</h3>
+                <div className="flex items-center gap-1 text-xs text-gray-400 font-medium bg-white/5 px-2 py-0.5 rounded">
                   <Clock className="w-3 h-3" />
-                  {stage.duration_weeks} weeks
+                  <span>{stage.duration_weeks} weeks</span>
                 </div>
               </div>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-1.5 mt-2">
                 {stage.skills.map(s => (
                   <span key={s} className="skill-badge">{s}</span>
                 ))}
               </div>
             </div>
-            <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform flex-shrink-0 ml-3 ${expanded ? "rotate-180" : ""}`} />
+            <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform flex-shrink-0 ml-3 ${expanded ? "rotate-180" : ""}`} />
           </div>
 
           {expanded && (
-            <div className="border-t border-white/5 p-5 space-y-5">
-              <p className="text-sm text-gray-400 leading-relaxed">{stage.description}</p>
+            <div className="border-t border-white/5 p-5 space-y-5 bg-white/[0.01]">
+              <p className="text-sm text-gray-300 leading-relaxed">{stage.description}</p>
 
               {/* Resources */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {freeResources.length > 0 && (
                   <div>
-                    <p className="text-xs text-emerald-400 font-medium uppercase tracking-wider mb-2">Free Track</p>
+                    <p className="text-xs text-emerald-400 font-semibold uppercase tracking-wider mb-2 flex items-center gap-1">
+                      <span>●</span> Free Learning Track
+                    </p>
                     <div className="space-y-2">
                       {freeResources.map((r, i) => (
-                        <a key={i} href={r.url} target="_blank" rel="noopener noreferrer"
-                          className="flex items-center gap-2 p-2.5 rounded-xl bg-emerald-400/5 border border-emerald-400/10 hover:border-emerald-400/30 transition-all group"
-                          onClick={e => e.stopPropagation()}>
+                        <a
+                          key={i}
+                          href={r.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2.5 p-3 rounded-xl bg-emerald-400/5 border border-emerald-400/15 hover:border-emerald-400/35 transition-all group"
+                          onClick={e => e.stopPropagation()}
+                        >
                           <span className="text-base">{PLATFORM_ICONS[r.platform] ?? "📌"}</span>
                           <div className="flex-1 min-w-0">
-                            <p className="text-xs text-white truncate">{r.name}</p>
-                            <p className="text-xs text-gray-500">{r.platform} · {r.duration_hrs}h</p>
+                            <p className="text-xs text-white font-medium truncate">{r.name}</p>
+                            <p className="text-[11px] text-gray-400">{r.platform} · {r.duration_hrs}h</p>
                           </div>
-                          <ExternalLink className="w-3 h-3 text-gray-600 group-hover:text-emerald-400 flex-shrink-0" />
+                          <ExternalLink className="w-3 h-3 text-gray-500 group-hover:text-emerald-400 flex-shrink-0" />
                         </a>
                       ))}
                     </div>
@@ -218,18 +249,25 @@ function StageCard({ item, index }: { item: RoadmapItem; index: number }) {
                 )}
                 {paidResources.length > 0 && (
                   <div>
-                    <p className="text-xs text-amber-400 font-medium uppercase tracking-wider mb-2">Paid Track</p>
+                    <p className="text-xs text-amber-400 font-semibold uppercase tracking-wider mb-2 flex items-center gap-1">
+                      <span>●</span> Paid Track (Certifications)
+                    </p>
                     <div className="space-y-2">
                       {paidResources.map((r, i) => (
-                        <a key={i} href={r.url} target="_blank" rel="noopener noreferrer"
-                          className="flex items-center gap-2 p-2.5 rounded-xl bg-amber-400/5 border border-amber-400/10 hover:border-amber-400/30 transition-all group"
-                          onClick={e => e.stopPropagation()}>
+                        <a
+                          key={i}
+                          href={r.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2.5 p-3 rounded-xl bg-amber-400/5 border border-amber-400/15 hover:border-amber-400/35 transition-all group"
+                          onClick={e => e.stopPropagation()}
+                        >
                           <span className="text-base">{PLATFORM_ICONS[r.platform] ?? "📌"}</span>
                           <div className="flex-1 min-w-0">
-                            <p className="text-xs text-white truncate">{r.name}</p>
-                            <p className="text-xs text-gray-500">{r.platform} · {r.duration_hrs}h</p>
+                            <p className="text-xs text-white font-medium truncate">{r.name}</p>
+                            <p className="text-[11px] text-gray-400">{r.platform} · {r.duration_hrs}h</p>
                           </div>
-                          <ExternalLink className="w-3 h-3 text-gray-600 group-hover:text-amber-400 flex-shrink-0" />
+                          <ExternalLink className="w-3 h-3 text-gray-500 group-hover:text-amber-400 flex-shrink-0" />
                         </a>
                       ))}
                     </div>
@@ -238,11 +276,11 @@ function StageCard({ item, index }: { item: RoadmapItem; index: number }) {
               </div>
 
               {/* Milestone */}
-              <div className="flex items-start gap-2 p-3 rounded-xl bg-violet-500/10 border border-violet-500/20">
+              <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-violet-500/10 border border-violet-500/25">
                 <Star className="w-4 h-4 text-violet-400 mt-0.5 flex-shrink-0" />
                 <div>
-                  <p className="text-xs text-violet-400 font-medium mb-0.5">Stage Milestone</p>
-                  <p className="text-xs text-gray-300">{stage.milestone}</p>
+                  <p className="text-xs text-violet-300 font-bold mb-0.5">Stage Milestone</p>
+                  <p className="text-xs text-gray-300 leading-relaxed">{stage.milestone}</p>
                 </div>
               </div>
             </div>
@@ -255,21 +293,22 @@ function StageCard({ item, index }: { item: RoadmapItem; index: number }) {
 
 function RoadmapInner() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const [career, setCareer] = useState(searchParams.get("career") || "");
-  const [careerTitle, setCareerTitle] = useState(searchParams.get("title") || "");
-  const [input, setInput] = useState(career);
-  const [roadmap, setRoadmap] = useState<RoadmapItem[] | null>(null);
+  const [input, setInput] = useState(career || "Full Stack Developer");
+  const [roadmap, setRoadmap] = useState<RoadmapItem[] | null>(DEMO_ROADMAP);
   const [loading, setLoading] = useState(false);
   const [track, setTrack] = useState<"free" | "paid" | "hybrid">("hybrid");
 
   useEffect(() => {
-    if (career) generateRoadmap(career);
-  }, []);
+    if (career) {
+      setInput(career);
+      generateRoadmap(career);
+    }
+  }, [career]);
 
   const generateRoadmap = async (slug?: string) => {
     setLoading(true);
-    await new Promise(r => setTimeout(r, 1200)); // Simulate AI generation
+    await new Promise(r => setTimeout(r, 600));
     setRoadmap(DEMO_ROADMAP);
     setLoading(false);
   };
@@ -291,134 +330,152 @@ function RoadmapInner() {
     .reduce((acc, r) => acc + r.duration_hrs, 0);
 
   return (
-    <div className="min-h-screen bg-[#030712] bg-grid">
-      <Navbar />
-      <div className="bg-glow-violet fixed inset-0 pointer-events-none" />
-
-      <main className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 pt-24 pb-16">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-3">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
+      {/* Standard Page Header */}
+      <PageHeader
+        badge={{
+          icon: Map,
+          text: "Personalized Progression",
+          variant: "violet",
+        }}
+        title={
+          <>
             AI <span className="gradient-text">Roadmap</span> Generator
-          </h1>
-          <p className="text-gray-400">Personalised multi-stage learning paths with free and paid resource tracks.</p>
+          </>
+        }
+        description="Multi-stage personalized learning pathways curated with free SWAYAM/NPTEL courses, industry certificates, and milestone projects."
+      />
+
+      {/* Generator Input Card */}
+      <div className="glass border border-white/10 rounded-2xl p-5 mb-8">
+        <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-2.5">
+          Enter Your Target Career Or Skill
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <input
+            id="roadmap-career-input"
+            type="text"
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={e => e.key === "Enter" && handleGenerate()}
+            placeholder="e.g., Full Stack Developer, Data Scientist, DevOps Engineer, Cloud Architect..."
+            className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-violet-500/50 text-sm transition-all"
+          />
+          <button
+            id="generate-roadmap"
+            onClick={handleGenerate}
+            disabled={loading || !input.trim()}
+            className="flex items-center justify-center gap-2 px-6 py-3 bg-violet-600 hover:bg-violet-500 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl font-semibold text-sm transition-all shadow-md shadow-violet-600/20 shrink-0"
+          >
+            {loading ? (
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              <Wand2 className="w-4 h-4" />
+            )}
+            <span>{loading ? "Generating..." : "Generate Roadmap"}</span>
+          </button>
         </div>
 
-        {/* Generator Input */}
-        <div className="glass border border-white/10 rounded-2xl p-5 mb-8">
-          <p className="text-sm text-gray-400 mb-3">Enter your target career or skill</p>
-          <div className="flex gap-3">
-            <input
-              id="roadmap-career-input"
-              type="text"
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && handleGenerate()}
-              placeholder="e.g., Full Stack Developer, Data Scientist, DevOps Engineer..."
-              className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-violet-500/50 transition-all text-sm"
-            />
+        {/* Track selector */}
+        <div className="flex items-center gap-2 mt-4 pt-3 border-t border-white/5">
+          <span className="text-xs text-gray-400 font-medium">Curriculum Track:</span>
+          {(["free", "paid", "hybrid"] as const).map(t => (
             <button
-              id="generate-roadmap"
-              onClick={handleGenerate}
-              disabled={loading || !input.trim()}
-              className="flex items-center gap-2 px-5 py-3 bg-violet-500 hover:bg-violet-400 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl font-medium text-sm transition-all"
+              key={t}
+              onClick={() => setTrack(t)}
+              className={`px-3 py-1 rounded-full text-xs font-semibold border transition-all capitalize ${
+                track === t
+                  ? t === "free"
+                    ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-300"
+                    : t === "paid"
+                    ? "bg-amber-500/20 border-amber-500/40 text-amber-300"
+                    : "bg-violet-500/20 border-violet-500/40 text-violet-300"
+                  : "border-white/10 text-gray-400 hover:border-white/20 hover:text-gray-200"
+              }`}
             >
-              {loading ? (
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : (
-                <Wand2 className="w-4 h-4" />
-              )}
-              {loading ? "Generating..." : "Generate"}
+              {t === "free" ? "Free SWAYAM/NPTEL" : t === "paid" ? "Paid Certifications" : "Hybrid Track"}
             </button>
-          </div>
-
-          {/* Track selector */}
-          <div className="flex items-center gap-2 mt-4">
-            <span className="text-xs text-gray-500">Resource track:</span>
-            {(["free", "paid", "hybrid"] as const).map(t => (
-              <button
-                key={t}
-                onClick={() => setTrack(t)}
-                className={`px-3 py-1 rounded-full text-xs font-medium border transition-all capitalize ${
-                  track === t
-                    ? t === "free" ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-300"
-                      : t === "paid" ? "bg-amber-500/20 border-amber-500/40 text-amber-300"
-                      : "bg-violet-500/20 border-violet-500/40 text-violet-300"
-                    : "border-white/10 text-gray-500 hover:border-white/20"
-                }`}
-              >
-                {t === "free" ? "Free only" : t === "paid" ? "Paid only" : "Hybrid"}
-              </button>
-            ))}
-          </div>
+          ))}
         </div>
+      </div>
 
-        {/* Loading skeleton */}
-        {loading && (
-          <div className="space-y-4">
-            {[1, 2, 3].map(i => (
-              <div key={i} className="glass rounded-2xl p-5 animate-pulse">
-                <div className="h-4 bg-white/5 rounded w-1/3 mb-3" />
-                <div className="h-3 bg-white/5 rounded w-full mb-2" />
-                <div className="h-3 bg-white/5 rounded w-2/3" />
+      {/* Loading Skeleton */}
+      {loading && (
+        <div className="space-y-4">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="glass rounded-2xl p-5 animate-pulse border border-white/5">
+              <div className="h-4 bg-white/10 rounded w-1/3 mb-3" />
+              <div className="h-3 bg-white/10 rounded w-full mb-2" />
+              <div className="h-3 bg-white/10 rounded w-2/3" />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Roadmap Content */}
+      {!loading && roadmap && (
+        <>
+          {/* Summary Stats */}
+          <div className="grid grid-cols-3 gap-4 mb-8">
+            {[
+              { label: "Total Duration", value: `${totalWeeks} weeks`, icon: Clock },
+              { label: "Learning Hours", value: `~${totalHours}h`, icon: BookOpen },
+              { label: "Stages", value: `${roadmap.filter(r => !r.is_decision_point).length}`, icon: Zap },
+            ].map(({ label, value, icon: Icon }) => (
+              <div key={label} className="glass rounded-2xl p-4 text-center border border-white/[0.07]">
+                <Icon className="w-5 h-5 text-violet-400 mx-auto mb-1.5" />
+                <p className="text-xl sm:text-2xl font-bold text-white mb-0.5">{value}</p>
+                <p className="text-xs text-gray-400 font-medium">{label}</p>
               </div>
             ))}
           </div>
-        )}
 
-        {/* Roadmap */}
-        {!loading && roadmap && (
-          <>
-            {/* Summary stats */}
-            <div className="grid grid-cols-3 gap-4 mb-8">
-              {[
-                { label: "Total Duration", value: `${totalWeeks} weeks`, icon: Clock },
-                { label: "Learning Hours", value: `~${totalHours}h`, icon: BookOpen },
-                { label: "Stages", value: `${roadmap.filter(r => !r.is_decision_point).length}`, icon: Zap },
-              ].map(({ label, value, icon: Icon }) => (
-                <div key={label} className="glass rounded-xl p-4 text-center">
-                  <Icon className="w-4 h-4 text-violet-400 mx-auto mb-2" />
-                  <p className="text-xl font-bold text-white">{value}</p>
-                  <p className="text-xs text-gray-500">{label}</p>
-                </div>
-              ))}
-            </div>
-
-            {/* Timeline */}
-            <div>
-              {roadmap.map((item, i) => (
-                <StageCard key={i} item={item} index={i} />
-              ))}
-            </div>
-
-            {/* CTA */}
-            <div className="mt-4 p-5 glass border border-violet-500/20 rounded-2xl text-center">
-              <p className="text-white font-semibold mb-1">Ready to start your journey?</p>
-              <p className="text-gray-400 text-sm mb-4">Chat with Vidyavani AI for personalised guidance on this roadmap.</p>
-              <a href="/chat" className="inline-flex items-center gap-2 px-5 py-2.5 bg-violet-500 hover:bg-violet-400 text-white rounded-xl text-sm font-medium transition-all">
-                <Wand2 className="w-4 h-4" /> Talk to AI Advisor
-              </a>
-            </div>
-          </>
-        )}
-
-        {/* Empty state */}
-        {!loading && !roadmap && (
-          <div className="text-center py-20">
-            <Wand2 className="w-12 h-12 text-violet-400/30 mx-auto mb-4" />
-            <p className="text-gray-500">Enter a career above to generate your personalised roadmap.</p>
+          {/* Timeline */}
+          <div className="mb-8">
+            {roadmap.map((item, i) => (
+              <StageCard key={i} item={item} index={i} />
+            ))}
           </div>
-        )}
-      </main>
+
+          {/* CTA Box */}
+          <div className="p-6 glass border border-violet-500/25 rounded-2xl text-center">
+            <h3 className="text-white font-bold text-base sm:text-lg mb-1">
+              Have questions about this roadmap?
+            </h3>
+            <p className="text-gray-400 text-sm mb-4 max-w-md mx-auto">
+              Our LangGraph AI career advisor can analyze your specific resume and adjust these milestones in real-time.
+            </p>
+            <Link
+              href="/chat"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-violet-600 hover:bg-violet-500 text-white rounded-xl text-sm font-semibold transition-all shadow-lg shadow-violet-600/25"
+            >
+              <Wand2 className="w-4 h-4" />
+              <span>Talk to AI Career Advisor</span>
+            </Link>
+          </div>
+        </>
+      )}
+
+      {/* Empty state */}
+      {!loading && !roadmap && (
+        <div className="text-center py-20 glass rounded-2xl border border-white/10 p-8">
+          <Wand2 className="w-12 h-12 text-violet-400/40 mx-auto mb-4" />
+          <p className="text-gray-300 font-semibold">Enter a career role above to generate your roadmap.</p>
+        </div>
+      )}
     </div>
   );
 }
 
 export default function RoadmapContent() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#030712] flex items-center justify-center">
-      <div className="w-8 h-8 border-2 border-violet-500/30 border-t-violet-500 rounded-full animate-spin" />
-    </div>}>
+    <Suspense
+      fallback={
+        <div className="min-h-[50vh] flex items-center justify-center">
+          <div className="w-8 h-8 border-2 border-violet-500/30 border-t-violet-500 rounded-full animate-spin" />
+        </div>
+      }
+    >
       <RoadmapInner />
     </Suspense>
   );

@@ -40,6 +40,10 @@ India produces **1.5 crore skilled graduates every year** through NSQF-certified
 
 ## 🏗️ Architecture
 
+<p align="center">
+  <img src="architecture_diagram.png" alt="Vidyavani End-to-End System Architecture" width="100%" />
+</p>
+
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                        Frontend (Next.js 16)                    │

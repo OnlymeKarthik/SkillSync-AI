@@ -29,6 +29,61 @@ body {
 }
 
 /* =====================================================================
+   Standard Page Containers & Margins
+   ===================================================================== */
+.page-container {
+  max-width: 80rem; /* max-w-7xl */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .page-container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+.page-container-narrow {
+  max-width: 64rem; /* max-w-5xl */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .page-container-narrow {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 2.5rem;
+  }
+}
+
+.app-main {
+  flex: 1 1 0%;
+  padding-top: 4.75rem; /* 76px clearance for fixed 64px navbar */
+  position: relative;
+  z-index: 10;
+}
+
+/* =====================================================================
    Glass morphism card utility
    ===================================================================== */
 .glass {
@@ -66,17 +121,17 @@ body {
 }
 
 /* =====================================================================
-   Animated gradient background
+   Background patterns
    ===================================================================== */
 .bg-grid {
   background-image:
-    linear-gradient(rgba(139, 92, 246, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(139, 92, 246, 0.05) 1px, transparent 1px);
-  background-size: 60px 60px;
+    linear-gradient(rgba(139, 92, 246, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 92, 246, 0.04) 1px, transparent 1px);
+  background-size: 50px 50px;
 }
 
 .bg-glow-violet {
-  background: radial-gradient(ellipse at 50% 0%, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+  background: radial-gradient(ellipse at 50% 0%, rgba(139, 92, 246, 0.12) 0%, transparent 70%);
 }
 
 /* =====================================================================
@@ -117,14 +172,14 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #111827;
+  background: #090d16;
 }
 ::-webkit-scrollbar-thumb {
-  background: #374151;
+  background: #1f293d;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #4b5563;
+  background: #374151;
 }
 
 /* =====================================================================
