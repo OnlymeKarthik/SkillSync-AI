@@ -44,6 +44,8 @@ backend/uploads/
 backend/data/nsqf_pdfs/
 *.pdf
 *.docx
+*.pptx
+*.ppt
 screenshot_*.png
 *.png
 
