@@ -1,0 +1,74 @@
+# =============================================================================
+# Vidyavani — .gitignore
+# =============================================================================
+
+# --- Secrets (NEVER commit these) ---
+.env
+.env.local
+.env.production
+backend/.env
+frontend/.env.local
+*.pem
+*.key
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+.eggs/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+*.log
+
+# --- Node / Next.js ---
+node_modules/
+frontend/node_modules/
+.next/
+frontend/.next/
+out/
+frontend/out/
+*.tsbuildinfo
+frontend/.env*.local
+.vercel/
+
+# --- Uploads & data ---
+backend/uploads/
+backend/data/nsqf_pdfs/
+*.pdf
+*.docx
+
+# --- HuggingFace model cache ---
+.cache/
+backend/.cache/
+
+# --- Database ---
+*.sqlite
+*.db
+
+# --- Docker volumes ---
+postgres_data/
+neo4j_data/
+redis_data/
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- IDE ---
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# --- Misc ---
+*.bak
+*.tmp

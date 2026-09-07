@@ -1,0 +1,75 @@
+# =============================================================================
+# Vidyavani — Backend Dependencies
+# Python 3.12+ required
+# Install: pip install -r requirements.txt
+# =============================================================================
+
+# --- Web Framework ---
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+python-multipart==0.0.9          # File uploads (resume)
+httpx==0.27.2                    # Async HTTP client
+
+# --- Database ---
+sqlalchemy[asyncio]==2.0.35      # Async ORM
+asyncpg==0.29.0                  # Async PostgreSQL driver
+pgvector==0.3.2                  # pgvector Python client
+alembic==1.13.2                  # DB migrations
+
+# --- Neo4j ---
+neo4j==5.24.0                    # Official Neo4j async driver
+
+# --- Redis / Task Queue ---
+redis==5.0.8
+arq==0.26.1                      # Async Redis Queue for background jobs
+
+# --- AI / LLM ---
+langchain==0.3.1
+langchain-groq==0.2.0            # Groq LLM integration
+langchain-google-genai==2.0.1    # Gemini fallback
+langchain-community==0.3.1
+langgraph==0.2.28                # Multi-agent orchestration
+langchain-neo4j==0.1.0           # Neo4j + LangChain integration
+
+# --- Embeddings ---
+sentence-transformers==3.3.1     # BAAI/bge-m3 embeddings
+torch>=2.9.0                     # PyTorch — use latest for Python 3.14 compatibility
+transformers>=4.47.0
+
+# --- RAG ---
+llama-index==0.11.10             # LlamaIndex for PDF RAG
+llama-index-embeddings-huggingface==0.3.1
+llama-index-llms-groq==0.2.0
+
+# --- NLP ---
+spacy>=3.7.6                     # NER pipeline
+# After install, run: python -m spacy download en_core_web_sm
+
+# --- Web Scraping ---
+crawl4ai==0.3.74                 # AI-native web scraper
+
+# --- Document Parsing ---
+pymupdf==1.24.10                 # PDF parsing (resume + NSQF PDFs)
+python-docx==1.1.2               # DOCX resume parsing
+
+# --- Microsoft GraphRAG ---
+graphrag==0.3.6                  # Microsoft GraphRAG pipeline
+
+# --- Data Validation ---
+pydantic==2.9.2
+pydantic-settings==2.5.2
+
+# --- Utilities ---
+python-dotenv==1.0.1
+aiofiles==24.1.0                 # Async file I/O
+tenacity==9.0.0                  # Retry logic for API calls
+structlog==24.4.0                # Structured logging
+rich==13.8.1                     # Pretty console output
+
+# --- Supabase ---
+supabase==2.7.4                  # Supabase Python client (storage, auth)
+
+# --- Dev/Testing ---
+pytest==8.3.3
+pytest-asyncio==0.24.0
+httpx==0.27.2                    # Already listed above, used for test client

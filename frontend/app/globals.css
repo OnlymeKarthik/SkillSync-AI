@@ -1,0 +1,152 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+@import "tailwindcss";
+
+:root {
+  --font-inter: "Inter", sans-serif;
+
+  /* Brand Colors */
+  --brand-primary: 139 92 246;    /* violet-500 */
+  --brand-secondary: 59 130 246;  /* blue-500 */
+  --brand-accent: 16 185 129;     /* emerald-500 */
+  --brand-danger: 239 68 68;      /* red-500 */
+  --brand-warning: 245 158 11;    /* amber-500 */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #030712;
+  color: #f9fafb;
+  font-family: var(--font-inter);
+}
+
+/* =====================================================================
+   Glass morphism card utility
+   ===================================================================== */
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-hover {
+  transition: all 0.2s ease;
+}
+.glass-hover:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(139, 92, 246, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.15);
+}
+
+/* =====================================================================
+   Gradient text
+   ===================================================================== */
+.gradient-text {
+  background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 50%, #10b981 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-brand {
+  background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* =====================================================================
+   Animated gradient background
+   ===================================================================== */
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(139, 92, 246, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 92, 246, 0.05) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.bg-glow-violet {
+  background: radial-gradient(ellipse at 50% 0%, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+}
+
+/* =====================================================================
+   Skill badge
+   ===================================================================== */
+.skill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  color: #a78bfa;
+  transition: all 0.15s ease;
+}
+.skill-badge:hover {
+  background: rgba(139, 92, 246, 0.2);
+}
+.skill-badge.gap {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+.skill-badge.covered {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+/* =====================================================================
+   Scrollbar styling
+   ===================================================================== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #111827;
+}
+::-webkit-scrollbar-thumb {
+  background: #374151;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #4b5563;
+}
+
+/* =====================================================================
+   Loading pulse animation
+   ===================================================================== */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(139, 92, 246, 0.4); }
+  50% { opacity: 0.7; box-shadow: 0 0 20px rgba(139, 92, 246, 0.8); }
+}
+.pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* =====================================================================
+   SSE stream typing cursor
+   ===================================================================== */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.typing-cursor::after {
+  content: "▋";
+  animation: blink 1s step-end infinite;
+  color: #8b5cf6;
+}

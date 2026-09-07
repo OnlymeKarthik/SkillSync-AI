@@ -1,0 +1,117 @@
+# =============================================================================
+# Vidyavani — Local Development Orchestration
+# =============================================================================
+# Services:
+#   db        — PostgreSQL 16 + pgvector  (port 5432)
+#   neo4j     — Neo4j Graph DB            (port 7474 UI, 7687 bolt)
+#   redis     — Redis cache + task queue  (port 6379)
+#   pgadmin   — Web DB admin UI           (port 5050)
+#
+# Usage:
+#   docker-compose up -d          # Start all services in background
+#   docker-compose ps             # Check health
+#   docker-compose down -v        # Stop and remove volumes
+# =============================================================================
+
+version: "3.9"
+
+services:
+
+  # ---------------------------------------------------------------------------
+  # PostgreSQL 16 + pgvector
+  # Handles: structured data, vector similarity search, Supabase-compatible schema
+  # ---------------------------------------------------------------------------
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: vidyavani_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: vidyavani
+      POSTGRES_PASSWORD: vidyavani_secret
+      POSTGRES_DB: vidyavani_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - ./database/seed_data.sql:/docker-entrypoint-initdb.d/02_seed.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U Vidyavani -d vidyavani_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ---------------------------------------------------------------------------
+  # Neo4j 5 — Knowledge Graph Database
+  # Handles: skill relationships, career paths, GraphRAG community detection
+  # UI: http://localhost:7474  (user: neo4j / pass: vidyavani_neo4j)
+  # Bolt: bolt://localhost:7687
+  # ---------------------------------------------------------------------------
+  neo4j:
+    image: neo4j:5.18-community
+    container_name: vidyavani_neo4j
+    restart: unless-stopped
+    environment:
+      NEO4J_AUTH: neo4j/vidyavani_neo4j
+      NEO4J_PLUGINS: '["apoc", "graph-data-science"]'   # APOC + GDS for GraphRAG
+      NEO4J_dbms_security_procedures_unrestricted: "apoc.*,gds.*"
+      NEO4J_dbms_memory_heap_initial__size: "512m"
+      NEO4J_dbms_memory_heap_max__size: "1G"
+    ports:
+      - "7474:7474"   # HTTP Browser UI
+      - "7687:7687"   # Bolt protocol (used by Python driver)
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+    healthcheck:
+      test: ["CMD", "cypher-shell", "-u", "neo4j", "-p", "vidyavani_neo4j", "RETURN 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+
+  # ---------------------------------------------------------------------------
+  # Redis 7 — Cache + Background Task Queue
+  # Handles: API response caching, ARQ job queue for scraper/embedding tasks
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: vidyavani_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # ---------------------------------------------------------------------------
+  # pgAdmin 4 — Web-based Postgres management (optional, great for demo prep)
+  # Access: http://localhost:5050
+  # Login: admin@vidyavani.ai / admin
+  # ---------------------------------------------------------------------------
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: vidyavani_pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@vidyavani.ai
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+    driver: local
+  neo4j_data:
+    driver: local
+  neo4j_logs:
+    driver: local
+  redis_data:
+    driver: local
