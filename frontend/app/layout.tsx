@@ -1,16 +1,20 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
-
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
-  title: "Vidyavani — Bridge the Skill Gap",
+  title: "Vidyavani — AI Career Intelligence Platform",
   description:
-    "AI-powered career intelligence platform. Discover skill gaps between NSQF curricula and real industry demand. Get personalized roadmaps and find both private and government job opportunities.",
-  keywords: ["NSQF", "skill gap", "career", "upskill", "India jobs", "government jobs", "Smart India Hackathon"],
+    "Bridge the gap between NSQF curricula and industry demand. Get AI-powered career roadmaps, skill gap analysis, and job market insights tailored for the Indian workforce.",
+  keywords:
+    "NSQF, skill gap analysis, career roadmap, AI career advisor, India jobs, government jobs, private sector",
+  openGraph: {
+    title: "Vidyavani — AI Career Intelligence Platform",
+    description:
+      "AI-powered career guidance bridging NSQF curriculum with real industry demand.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -19,11 +23,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${inter.variable} font-sans bg-[#030712] text-gray-100 min-h-screen flex flex-col antialiased bg-grid relative selection:bg-violet-500/30 selection:text-white`}>
-        <div className="bg-glow-violet fixed inset-0 pointer-events-none z-0" />
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body>
         <Navbar />
-        <main className="app-main">{children}</main>
+        <main style={{ minHeight: "calc(100vh - 64px)" }}>{children}</main>
         <Footer />
       </body>
     </html>

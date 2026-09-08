@@ -24,16 +24,19 @@ redis==5.0.8
 arq==0.26.1                      # Async Redis Queue for background jobs
 
 # --- AI / LLM ---
-langchain==0.3.1
+# All langchain packages must be version-compatible with each other.
+# langchain-neo4j 0.1.0 requires langchain-community>=0.3.3
+# langchain 0.3.x requires tenacity<9.0.0
+langchain==0.3.7
 langchain-groq==0.2.0            # Groq LLM integration
 langchain-google-genai==2.0.1    # Gemini fallback
-langchain-community==0.3.1
+langchain-community==0.3.7       # Must be >=0.3.3 for langchain-neo4j
 langgraph==0.2.28                # Multi-agent orchestration
 langchain-neo4j==0.1.0           # Neo4j + LangChain integration
 
 # --- Embeddings ---
 sentence-transformers==3.3.1     # BAAI/bge-m3 embeddings
-torch>=2.9.0                     # PyTorch — use latest for Python 3.14 compatibility
+torch>=2.0.0                     # PyTorch
 transformers>=4.47.0
 
 # --- RAG ---
@@ -62,7 +65,7 @@ pydantic-settings==2.5.2
 # --- Utilities ---
 python-dotenv==1.0.1
 aiofiles==24.1.0                 # Async file I/O
-tenacity==9.0.0                  # Retry logic for API calls
+tenacity==8.5.0                  # Retry logic — must be <9.0.0 (langchain constraint)
 structlog==24.4.0                # Structured logging
 rich==13.8.1                     # Pretty console output
 
@@ -72,4 +75,3 @@ supabase==2.7.4                  # Supabase Python client (storage, auth)
 # --- Dev/Testing ---
 pytest==8.3.3
 pytest-asyncio==0.24.0
-httpx==0.27.2                    # Already listed above, used for test client

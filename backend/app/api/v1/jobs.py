@@ -31,7 +31,8 @@ async def list_jobs(
     db: AsyncSession = Depends(get_db),
 ):
     offset = (page - 1) * page_size
-    conditions = []
+    # All user values go into bind params — never interpolated into SQL
+    conditions: list[str] = []
     params: dict = {"limit": page_size, "offset": offset}
 
     if sector_type != "all":
@@ -40,8 +41,14 @@ async def list_jobs(
     if state:
         conditions.append("state ILIKE :state")
         params["state"] = f"%{state}%"
+    if domain:
+        conditions.append("title ILIKE :domain")
+        params["domain"] = f"%{domain}%"
+    if salary_min is not None:
+        conditions.append("salary_min >= :salary_min")
+        params["salary_min"] = salary_min
 
-    where = f"WHERE {' AND '.join(conditions)}" if conditions else ""
+    where = ("WHERE " + " AND ".join(conditions)) if conditions else ""
 
     result = await db.execute(
         text(f"""

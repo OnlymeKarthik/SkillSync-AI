@@ -176,6 +176,8 @@ class DatabaseManager:
 
         # Redis
         try:
+            if self._redis is None:
+                raise RuntimeError("Redis not connected")
             await self._redis.ping()
             status["redis"] = "healthy"
         except Exception as e:

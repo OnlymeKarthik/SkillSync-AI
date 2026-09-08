@@ -18,6 +18,7 @@ Also provides:
   GET  /api/v1/skills/gap-summary — top N unmatched skills (the gaps)
 """
 
+import asyncio
 from typing import List, Optional
 from uuid import UUID
 
@@ -270,15 +271,17 @@ async def match_skills_batch(
     """
     log.info("Batch skill match request", count=len(request.skills))
 
-    results = []
-    for skill in request.skills:
-        result = await _match_skill(
+    # Run all skill matches concurrently instead of sequentially
+    results = await asyncio.gather(*[
+        _match_skill(
             skill=skill,
             db=db,
             threshold=request.match_threshold,
             top_k=request.top_k,
         )
-        results.append(result)
+        for skill in request.skills
+    ])
+    results = list(results)
 
     gap_count = sum(1 for r in results if r.is_curriculum_gap)
     coverage_pct = round((len(results) - gap_count) / len(results) * 100, 1)
@@ -309,7 +312,11 @@ async def get_gap_summary(
     Returns the top skill gaps — the skills industry demands that
     curricula don't teach. This powers the dashboard charts.
     """
-    where_clause = "" if sector_type == "all" else "WHERE sector_type = :sector_type"
+    # Build WHERE clause correctly so we never emit a bare AND without WHERE
+    if sector_type == "all":
+        where_clause = "WHERE period_date >= CURRENT_DATE - INTERVAL '30 days'"
+    else:
+        where_clause = "WHERE sector_type = :sector_type AND period_date >= CURRENT_DATE - INTERVAL '30 days'"
 
     query = text(f"""
         SELECT
@@ -319,7 +326,6 @@ async def get_gap_summary(
             sector_type
         FROM skill_demand_stats
         {where_clause}
-        AND period_date >= CURRENT_DATE - INTERVAL '30 days'
         GROUP BY skill_name, sector_type
         ORDER BY total_demand DESC
         LIMIT :limit

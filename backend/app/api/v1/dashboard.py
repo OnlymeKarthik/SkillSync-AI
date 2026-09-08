@@ -62,57 +62,82 @@ class DashboardStats(BaseModel):
 )
 async def get_gap_analysis(
     limit: int = Query(default=10, ge=1, le=50, description="Number of skills to return"),
-    sector: str = Query(default="all", pattern="^(all|private|govt)$"),
+    sector: str = Query(default="all", pattern="^(all|private|govt|PRIVATE|GOVERNMENT)$"),
     domain: Optional[str] = Query(default=None, description="Filter by career domain"),
     db: AsyncSession = Depends(get_db),
 ):
     """
     Powers the main bar chart on the dashboard.
     Returns data in the format Tremor's BarChart expects.
+    The `sector` filter now actually constrains which job postings are included.
     """
-    query = text("""
-        WITH private_demand AS (
-            SELECT
-                es.name        AS skill_name,
-                COUNT(*)       AS demand_count
-            FROM extracted_skills es
-            JOIN job_postings jp ON es.job_id = jp.id
-            WHERE jp.sector_type = 'PRIVATE'
-              AND jp.scraped_at >= NOW() - INTERVAL '30 days'
-            GROUP BY es.name
-        ),
-        govt_demand AS (
-            SELECT
-                es.name        AS skill_name,
-                COUNT(*)       AS demand_count
-            FROM extracted_skills es
-            JOIN job_postings jp ON es.job_id = jp.id
-            WHERE jp.sector_type = 'GOVERNMENT'
-              AND jp.scraped_at >= NOW() - INTERVAL '30 days'
-            GROUP BY es.name
-        ),
-        combined AS (
-            SELECT
-                COALESCE(p.skill_name, g.skill_name) AS skill_name,
-                COALESCE(p.demand_count, 0)           AS private_demand,
-                COALESCE(g.demand_count, 0)           AS govt_demand
-            FROM private_demand p
-            FULL OUTER JOIN govt_demand g ON p.skill_name = g.skill_name
-        )
-        SELECT
-            c.skill_name,
-            c.private_demand,
-            c.govt_demand,
-            (c.private_demand + c.govt_demand) AS total_demand
-        FROM combined c
-        ORDER BY total_demand DESC
-        LIMIT :limit
-    """)
+    # Normalize sector to DB values
+    sector_map = {"all": None, "private": "PRIVATE", "govt": "GOVERNMENT",
+                  "PRIVATE": "PRIVATE", "GOVERNMENT": "GOVERNMENT"}
+    db_sector = sector_map.get(sector)
 
-    result = await db.execute(query, {"limit": limit})
+    if db_sector is None:
+        # Show both sectors side by side
+        query = text("""
+            WITH private_demand AS (
+                SELECT
+                    es.name        AS skill_name,
+                    COUNT(*)       AS demand_count
+                FROM extracted_skills es
+                JOIN job_postings jp ON es.job_id = jp.id
+                WHERE jp.sector_type = 'PRIVATE'
+                  AND jp.scraped_at >= NOW() - INTERVAL '30 days'
+                GROUP BY es.name
+            ),
+            govt_demand AS (
+                SELECT
+                    es.name        AS skill_name,
+                    COUNT(*)       AS demand_count
+                FROM extracted_skills es
+                JOIN job_postings jp ON es.job_id = jp.id
+                WHERE jp.sector_type = 'GOVERNMENT'
+                  AND jp.scraped_at >= NOW() - INTERVAL '30 days'
+                GROUP BY es.name
+            ),
+            combined AS (
+                SELECT
+                    COALESCE(p.skill_name, g.skill_name) AS skill_name,
+                    COALESCE(p.demand_count, 0)           AS private_demand,
+                    COALESCE(g.demand_count, 0)           AS govt_demand
+                FROM private_demand p
+                FULL OUTER JOIN govt_demand g ON p.skill_name = g.skill_name
+            )
+            SELECT
+                c.skill_name,
+                c.private_demand,
+                c.govt_demand,
+                (c.private_demand + c.govt_demand) AS total_demand
+            FROM combined c
+            ORDER BY total_demand DESC
+            LIMIT :limit
+        """)
+        result = await db.execute(query, {"limit": limit})
+    else:
+        # Filter to a single sector only
+        query = text("""
+            SELECT
+                es.name                                  AS skill_name,
+                COUNT(*) FILTER (WHERE jp.sector_type = 'PRIVATE')     AS private_demand,
+                COUNT(*) FILTER (WHERE jp.sector_type = 'GOVERNMENT')  AS govt_demand,
+                COUNT(*)                                                AS total_demand
+            FROM extracted_skills es
+            JOIN job_postings jp ON es.job_id = jp.id
+            WHERE jp.sector_type = :sector
+              AND jp.scraped_at >= NOW() - INTERVAL '30 days'
+            GROUP BY es.name
+            ORDER BY total_demand DESC
+            LIMIT :limit
+        """)
+        result = await db.execute(query, {"sector": db_sector, "limit": limit})
+
     rows = result.mappings().all()
 
-    # Format for Tremor BarChart — each item is one bar group
+    # Format for Recharts BarChart — each item is one bar group
     chart_data = [
         {
             "skill": row["skill_name"],
@@ -126,6 +151,7 @@ async def get_gap_analysis(
         "chart_data": chart_data,
         "period": "last_30_days",
         "categories": ["Private Sector", "Government"],
+        "sector_filter": sector,
     }
 
 
@@ -148,14 +174,37 @@ async def get_dashboard_stats(db: AsyncSession = Depends(get_db)):
         WHERE demand_percent > 5.0
           AND period_date >= CURRENT_DATE - INTERVAL '7 days'
     """)
+    # Compute avg gap coverage dynamically:
+    # For each high-demand skill, check if it has a strong curriculum match (similarity >= 0.85).
+    # avg_gap_coverage = % of top skills that ARE covered.
+    coverage_query = text("""
+        SELECT
+            ROUND(
+                100.0 * COUNT(*) FILTER (
+                    WHERE EXISTS (
+                        SELECT 1 FROM curriculum_skills cs
+                        WHERE cs.embedding IS NOT NULL
+                          AND 1 - (cs.embedding <=> es.embedding) >= 0.85
+                    )
+                ) / NULLIF(COUNT(*), 0),
+                1
+            ) AS coverage_percent
+        FROM extracted_skills es
+        WHERE es.embedding IS NOT NULL
+    """)
 
-    jobs_result = await db.execute(stats_query)
-    skills_result = await db.execute(skills_query)
-    gaps_result = await db.execute(gaps_query)
+    jobs_result     = await db.execute(stats_query)
+    skills_result   = await db.execute(skills_query)
+    gaps_result     = await db.execute(gaps_query)
+    coverage_result = await db.execute(coverage_query)
 
-    jobs = jobs_result.mappings().one()
-    skills = skills_result.mappings().one()
-    gaps = gaps_result.mappings().one()
+    jobs     = jobs_result.mappings().one()
+    skills   = skills_result.mappings().one()
+    gaps     = gaps_result.mappings().one()
+    coverage = coverage_result.mappings().one()
+
+    # Fall back to a sensible default only if no embedding data exists yet
+    avg_coverage = float(coverage["coverage_percent"] or 0.0)
 
     return DashboardStats(
         total_jobs_scraped=jobs["total_jobs"] or 0,
@@ -163,6 +212,6 @@ async def get_dashboard_stats(db: AsyncSession = Depends(get_db)):
         total_govt_jobs=jobs["govt_jobs"] or 0,
         total_curriculum_skills=skills["total"] or 0,
         total_skill_gaps=gaps["gaps"] or 0,
-        avg_gap_coverage_percent=68.5,  # Computed by background job
+        avg_gap_coverage_percent=avg_coverage,
         last_updated=str(jobs["last_scraped"] or "Not yet scraped"),
     )

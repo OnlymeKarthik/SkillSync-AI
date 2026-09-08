@@ -20,6 +20,7 @@ services:
   # ---------------------------------------------------------------------------
   # PostgreSQL 16 + pgvector
   # Handles: structured data, vector similarity search, Supabase-compatible schema
+  # Port 5434 on host -> 5432 inside container (avoids conflict with local Windows PostgreSQL on 5432/5433)
   # ---------------------------------------------------------------------------
   db:
     image: pgvector/pgvector:pg16
@@ -29,14 +30,15 @@ services:
       POSTGRES_USER: vidyavani
       POSTGRES_PASSWORD: vidyavani_secret
       POSTGRES_DB: vidyavani_db
+      POSTGRES_HOST_AUTH_METHOD: trust
     ports:
-      - "5432:5432"
+      - "5434:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./database/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
       - ./database/seed_data.sql:/docker-entrypoint-initdb.d/02_seed.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U Vidyavani -d vidyavani_db"]
+      test: ["CMD-SHELL", "pg_isready -U vidyavani -d vidyavani_db"]
       interval: 10s
       timeout: 5s
       retries: 5

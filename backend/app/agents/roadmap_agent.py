@@ -67,13 +67,26 @@ class RoadmapAgent:
     """LangGraph-powered roadmap generation agent."""
 
     def __init__(self):
-        self._groq = ChatGroq(
-            api_key=settings.GROQ_API_KEY,
-            model=settings.GROQ_MODEL,
-            temperature=0.3,
-            max_tokens=settings.GROQ_MAX_TOKENS,
-            streaming=True,
-        )
+        # Lazy-initialized to avoid crashing at import time when GROQ_API_KEY
+        # is blank/placeholder. The client is created on first actual use.
+        self._groq: ChatGroq | None = None
+
+    def _get_groq(self) -> ChatGroq:
+        """Return the Groq client, creating it on first call."""
+        if self._groq is None:
+            if not settings.GROQ_API_KEY or settings.GROQ_API_KEY.startswith("your_"):
+                raise RuntimeError(
+                    "GROQ_API_KEY is not set. Add a valid key to backend/.env "
+                    "(get one free at console.groq.com)."
+                )
+            self._groq = ChatGroq(
+                api_key=settings.GROQ_API_KEY,
+                model=settings.GROQ_MODEL,
+                temperature=0.3,
+                max_tokens=settings.GROQ_MAX_TOKENS,
+                streaming=True,
+            )
+        return self._groq
 
     async def _get_missing_skills(
         self, target_career: str, current_skills: List[str]
@@ -123,7 +136,7 @@ class RoadmapAgent:
         prompt = ChatPromptTemplate.from_messages([
             ("system", ROADMAP_SYSTEM_PROMPT),
         ])
-        chain = prompt | self._groq
+        chain = prompt | self._get_groq()
 
         # Step 3: Stream from Groq
         full_response = ""
@@ -155,8 +168,7 @@ class RoadmapAgent:
         try:
             stages = json.loads(full_response)
             if user_id and db:
-                await self._save_roadmap(user_id, target_career, stages, track, db)
-                roadmap_id = "saved"
+                roadmap_id = await self._save_roadmap(user_id, target_career, stages, track, db)
             else:
                 roadmap_id = None
 
@@ -194,14 +206,17 @@ class RoadmapAgent:
                         data = json.loads(line)
                         yield data.get("response", "")
 
-    async def _save_roadmap(self, user_id: str, career_slug: str, stages: list, track: str, db):
-        """Persist generated roadmap to PostgreSQL for the user."""
+    async def _save_roadmap(
+        self, user_id: str, career_slug: str, stages: list, track: str, db
+    ) -> str:
+        """Persist generated roadmap to PostgreSQL and return the new roadmap UUID."""
         from sqlalchemy import text
-        await db.execute(
+        result = await db.execute(
             text("""
                 INSERT INTO user_roadmaps (user_id, career_id, title, content, track)
                 SELECT :user_id, c.id, :title, :content ::jsonb, :track
                 FROM careers c WHERE c.slug = :slug
+                RETURNING id
             """),
             {
                 "user_id": user_id,
@@ -211,6 +226,8 @@ class RoadmapAgent:
                 "track": track,
             },
         )
+        row = result.fetchone()
+        return str(row[0]) if row else None
 
 
 # Singleton

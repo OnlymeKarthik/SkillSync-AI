@@ -1,121 +1,206 @@
 import Link from "next/link";
-import { BrainCircuit } from "lucide-react";
+import { Link2, ExternalLink } from "lucide-react";
 
-export default function Footer() {
+export function Footer() {
+  const currentYear = new Date().getFullYear();
+
+  const sections: Array<{
+    title: string;
+    links: Array<{ label: string; href: string; external?: boolean }>;
+  }> = [
+    {
+      title: "Platform",
+      links: [
+        { label: "Dashboard", href: "/dashboard" },
+        { label: "Career Explorer", href: "/careers" },
+        { label: "Job Board", href: "/jobs" },
+        { label: "Skill Graph", href: "/graph" },
+      ],
+    },
+    {
+      title: "Tools",
+      links: [
+        { label: "AI Roadmap", href: "/roadmap" },
+        { label: "Resume Analyzer", href: "/resume" },
+        { label: "AI Career Chat", href: "/chat" },
+        { label: "Skill Discovery", href: "/discover" },
+      ],
+    },
+    {
+      title: "Framework",
+      links: [
+        {
+          label: "NSQF Overview",
+          href: "https://nsdcindia.org/nsqf",
+          external: true,
+        },
+        {
+          label: "SWAYAM Courses",
+          href: "https://swayam.gov.in",
+          external: true,
+        },
+        { label: "NPTEL", href: "https://nptel.ac.in", external: true },
+        { label: "NCS Portal", href: "https://ncs.gov.in", external: true },
+      ],
+    },
+  ];
+
+
   return (
-    <footer className="w-full border-t border-white/[0.06] bg-[#030712]/80 backdrop-blur-md mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          {/* Brand Col */}
-          <div className="md:col-span-1">
-            <Link href="/" className="flex items-center gap-2.5 mb-3 group">
-              <div className="w-7 h-7 rounded-lg bg-violet-600 flex items-center justify-center">
-                <BrainCircuit size={16} className="text-white" />
+    <footer
+      style={{
+        borderTop: "1px solid var(--border)",
+        background: "var(--bg-surface)",
+        padding: "3rem 0 1.5rem",
+        marginTop: "auto",
+      }}
+    >
+      <div className="container-page">
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr repeat(3, auto)",
+            gap: "2rem",
+            marginBottom: "2.5rem",
+          }}
+        >
+          {/* Brand */}
+          <div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                marginBottom: "0.75rem",
+              }}
+            >
+              <div
+                style={{
+                  width: 30,
+                  height: 30,
+                  borderRadius: 7,
+                  background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "white",
+                  fontWeight: 700,
+                  fontSize: "0.85rem",
+                }}
+              >
+                V
               </div>
-              <span className="font-bold text-lg gradient-text-brand tracking-tight">
+              <span style={{ fontWeight: 700, color: "var(--text-primary)" }}>
                 Vidyavani
               </span>
-            </Link>
-            <p className="text-xs text-gray-400 leading-relaxed mb-4">
-              Real-time AI career intelligence bridging NSQF academia and industry demand with Knowledge Graphs and GraphRAG.
+            </div>
+            <p
+              style={{
+                color: "var(--text-muted)",
+                fontSize: "0.82rem",
+                lineHeight: 1.6,
+                maxWidth: 260,
+              }}
+            >
+              AI-powered career intelligence bridging the gap between NSQF
+              curricula and real industry demand.
             </p>
-            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-orange-500/10 border border-orange-500/20 text-orange-400">
-              <span>🇮🇳</span> Smart India Hackathon 2026
+            <div
+              style={{
+                display: "flex",
+                gap: "0.75rem",
+                marginTop: "1rem",
+              }}
+            >
+              <a
+                href="https://github.com"
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  color: "var(--text-muted)",
+                  transition: "color 0.2s",
+                  display: "flex",
+                }}
+                aria-label="GitHub"
+              >
+              <Link2 size={18} />
+              </a>
             </div>
           </div>
 
-          {/* Quick Nav */}
-          <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-300 mb-3">
-              Platform
-            </h4>
-            <ul className="space-y-2 text-xs text-gray-400">
-              <li>
-                <Link href="/dashboard" className="hover:text-violet-300 transition-colors">
-                  Skill Gap Dashboard
-                </Link>
-              </li>
-              <li>
-                <Link href="/discover" className="hover:text-violet-300 transition-colors">
-                  Explore Careers
-                </Link>
-              </li>
-              <li>
-                <Link href="/roadmap" className="hover:text-violet-300 transition-colors">
-                  Learning Roadmaps
-                </Link>
-              </li>
-              <li>
-                <Link href="/graph" className="hover:text-violet-300 transition-colors">
-                  Knowledge Graph Explorer
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Career Tools */}
-          <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-300 mb-3">
-              Career Tools
-            </h4>
-            <ul className="space-y-2 text-xs text-gray-400">
-              <li>
-                <Link href="/chat" className="hover:text-violet-300 transition-colors">
-                  AI Career Advisor
-                </Link>
-              </li>
-              <li>
-                <Link href="/jobs" className="hover:text-violet-300 transition-colors">
-                  Smart Job Board
-                </Link>
-              </li>
-              <li>
-                <Link href="/compare" className="hover:text-violet-300 transition-colors">
-                  Career Comparison
-                </Link>
-              </li>
-              <li>
-                <Link href="/onboarding" className="hover:text-violet-300 transition-colors">
-                  Resume Skill Extractor
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Govt & National Frameworks */}
-          <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-300 mb-3">
-              Standards & Data
-            </h4>
-            <ul className="space-y-2 text-xs text-gray-400">
-              <li className="flex items-center gap-1.5">
-                <span className="text-emerald-400">●</span> NSQF Levels 4 — 8 Compliant
-              </li>
-              <li className="flex items-center gap-1.5">
-                <span className="text-blue-400">●</span> NASSCOM SSC Qualification Packs
-              </li>
-              <li className="flex items-center gap-1.5">
-                <span className="text-purple-400">●</span> MSDE Curriculum Guidelines
-              </li>
-              <li className="flex items-center gap-1.5">
-                <span className="text-amber-400">●</span> Live Crawl4AI Market Harvester
-              </li>
-            </ul>
-          </div>
+          {/* Link sections */}
+          {sections.map((section) => (
+            <div key={section.title}>
+              <h4
+                style={{
+                  fontSize: "0.75rem",
+                  fontWeight: 600,
+                  color: "var(--text-muted)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.08em",
+                  marginBottom: "0.875rem",
+                }}
+              >
+                {section.title}
+              </h4>
+              <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
+                {section.links.map((link) => (
+                  <li key={link.label} style={{ marginBottom: "0.5rem" }}>
+                    {link.external ? (
+                      <a
+                        href={link.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        style={{
+                          color: "var(--text-secondary)",
+                          fontSize: "0.82rem",
+                          textDecoration: "none",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: "0.3rem",
+                          transition: "color 0.2s",
+                        }}
+                      >
+                        {link.label}
+                        <ExternalLink size={10} />
+                      </a>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        style={{
+                          color: "var(--text-secondary)",
+                          fontSize: "0.82rem",
+                          textDecoration: "none",
+                          transition: "color 0.2s",
+                        }}
+                      >
+                        {link.label}
+                      </Link>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
-        {/* Bottom bar */}
-        <div className="pt-6 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-500">
-          <p>
-            © 2026 Vidyavani (SkillSync AI) · Built by <strong className="text-gray-300 font-medium">Team Fantastic Six</strong> for SIH 2026.
+        <hr className="glow-divider" />
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            paddingTop: "1.25rem",
+            flexWrap: "wrap",
+            gap: "0.5rem",
+          }}
+        >
+          <p style={{ color: "var(--text-muted)", fontSize: "0.78rem" }}>
+            © {currentYear} Vidyavani. Built for SIH 2026.
           </p>
-          <div className="flex items-center gap-4">
-            <span className="text-gray-600">Open Source Innovation</span>
-            <span>·</span>
-            <Link href="/dashboard" className="text-gray-400 hover:text-white transition-colors">
-              Govt Analytics
-            </Link>
-          </div>
+          <p style={{ color: "var(--text-muted)", fontSize: "0.78rem" }}>
+            Powered by NSQF · Groq · Neo4j · pgvector
+          </p>
         </div>
       </div>
     </footer>

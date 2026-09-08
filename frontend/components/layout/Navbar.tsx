@@ -1,182 +1,202 @@
 "use client";
-
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 import {
-  BrainCircuit,
-  BarChart3,
-  Network,
-  MessageSquare,
-  Briefcase,
-  Compass,
-  Scale,
-  Map,
-  FileText,
   LayoutDashboard,
+  Briefcase,
+  Map,
+  Bot,
+  FileText,
+  Search,
+  Network,
   Menu,
   X,
+  Zap,
 } from "lucide-react";
 
 const navLinks = [
-  { href: "/dashboard", label: "Dashboard", icon: BarChart3 },
-  { href: "/discover",  label: "Explore",   icon: Compass },
-  { href: "/roadmap",   label: "Roadmap",   icon: Map },
-  { href: "/graph",     label: "Graph",     icon: Network },
-  { href: "/chat",      label: "AI Advisor",icon: MessageSquare },
-  { href: "/jobs",      label: "Jobs",      icon: Briefcase },
-  { href: "/compare",   label: "Compare",   icon: Scale },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/careers", label: "Careers", icon: Briefcase },
+  { href: "/jobs", label: "Jobs", icon: Search },
+  { href: "/roadmap", label: "Roadmap", icon: Map },
+  { href: "/chat", label: "AI Chat", icon: Bot },
+  { href: "/resume", label: "Resume", icon: FileText },
+  { href: "/discover", label: "Discover", icon: Zap },
+  { href: "/graph", label: "Graph", icon: Network },
 ];
 
-export default function Navbar() {
+export function Navbar() {
   const pathname = usePathname();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  // Close mobile menu on route change
-  useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [pathname]);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <>
-      <motion.nav
-        initial={{ y: -60, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.35, ease: "easeOut" }}
-        className="fixed top-0 left-0 right-0 z-50 h-16 glass border-b border-white/[0.07] bg-[#030712]/80 backdrop-blur-md"
+    <nav
+      style={{
+        position: "sticky",
+        top: 0,
+        zIndex: 100,
+        height: 64,
+        background: "rgba(11, 15, 26, 0.85)",
+        backdropFilter: "blur(12px)",
+        borderBottom: "1px solid rgba(255,255,255,0.07)",
+      }}
+    >
+      <div
+        className="container-page"
+        style={{
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "1rem",
+        }}
       >
-        <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 group shrink-0">
-            <div className="w-8 h-8 rounded-lg bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-600/30 group-hover:scale-105 transition-transform">
-              <BrainCircuit size={18} className="text-white" />
-            </div>
-            <span className="font-bold text-lg gradient-text-brand tracking-tight">
-              Vidyavani
-            </span>
-          </Link>
-
-          {/* Desktop Nav links */}
-          <div className="hidden lg:flex items-center gap-1">
-            {navLinks.map(({ href, label, icon: Icon }) => {
-              const active = pathname === href;
-              return (
-                <Link
-                  key={href}
-                  href={href}
-                  className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-150 ${
-                    active
-                      ? "text-violet-300 bg-violet-500/10 font-semibold"
-                      : "text-gray-400 hover:text-gray-100 hover:bg-white/[0.04]"
-                  }`}
-                >
-                  <Icon size={14} />
-                  {label}
-                  {active && (
-                    <motion.div
-                      layoutId="nav-pill"
-                      className="absolute inset-0 rounded-lg bg-violet-500/10 border border-violet-500/25 pointer-events-none"
-                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                    />
-                  )}
-                </Link>
-              );
-            })}
+        {/* Logo */}
+        <Link
+          href="/"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            textDecoration: "none",
+            flexShrink: 0,
+          }}
+        >
+          <div
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: 8,
+              background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "0.9rem",
+              fontWeight: 700,
+              color: "white",
+            }}
+          >
+            V
           </div>
+          <span
+            style={{
+              fontWeight: 700,
+              fontSize: "1.05rem",
+              color: "var(--text-primary)",
+            }}
+          >
+            Vidyavani
+          </span>
+        </Link>
 
-          {/* Right side CTAs */}
-          <div className="flex items-center gap-2.5">
-            <Link
-              href="/onboarding"
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-xs sm:text-sm font-medium transition-all duration-200 hover:shadow-lg hover:shadow-violet-500/25 active:scale-95"
-            >
-              <FileText size={14} />
-              <span className="hidden xs:inline">Upload Resume</span>
-              <span className="xs:hidden">Resume</span>
-            </Link>
-
-            <Link
-              href="/dashboard?sector=GOVERNMENT"
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-gray-400 hover:text-gray-100 hover:bg-white/[0.04] text-xs sm:text-sm font-medium border border-transparent hover:border-white/10 transition-all"
-            >
-              <LayoutDashboard size={14} />
-              <span className="hidden xl:inline">Govt Panel</span>
-            </Link>
-
-            {/* Mobile Hamburger Toggle */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
-              aria-label="Toggle navigation menu"
-            >
-              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-          </div>
+        {/* Desktop nav links */}
+        <div
+          className="hide-mobile"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.25rem",
+            overflowX: "auto",
+          }}
+        >
+          {navLinks.map(({ href, label, icon: Icon }) => {
+            const active = pathname === href;
+            return (
+              <Link
+                key={href}
+                href={href}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.375rem",
+                  padding: "0.4rem 0.7rem",
+                  borderRadius: 8,
+                  fontSize: "0.8rem",
+                  fontWeight: 500,
+                  textDecoration: "none",
+                  transition: "background 0.15s, color 0.15s",
+                  color: active ? "#a5b4fc" : "var(--text-secondary)",
+                  background: active
+                    ? "rgba(99,102,241,0.12)"
+                    : "transparent",
+                  border: active
+                    ? "1px solid rgba(99,102,241,0.2)"
+                    : "1px solid transparent",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                <Icon size={14} />
+                {label}
+              </Link>
+            );
+          })}
         </div>
-      </motion.nav>
 
-      {/* Mobile Drawer Menu */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setMobileMenuOpen(false)}
-              className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm lg:hidden"
-            />
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed top-16 right-0 bottom-0 z-50 w-72 bg-[#090d16] border-l border-white/10 p-5 flex flex-col justify-between lg:hidden overflow-y-auto"
-            >
-              <div className="space-y-1.5">
-                <div className="text-xs font-semibold uppercase tracking-wider text-gray-500 px-3 py-2">
-                  Navigation
-                </div>
-                {navLinks.map(({ href, label, icon: Icon }) => {
-                  const active = pathname === href;
-                  return (
-                    <Link
-                      key={href}
-                      href={href}
-                      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                        active
-                          ? "bg-violet-600/20 text-violet-300 border border-violet-500/30"
-                          : "text-gray-300 hover:bg-white/5 hover:text-white"
-                      }`}
-                    >
-                      <Icon size={16} className={active ? "text-violet-400" : "text-gray-400"} />
-                      <span>{label}</span>
-                    </Link>
-                  );
-                })}
-              </div>
+        {/* Mobile hamburger */}
+        <button
+          className="show-mobile-only"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          style={{
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            color: "var(--text-primary)",
+            padding: "0.5rem",
+            display: "flex",
+            alignItems: "center",
+          }}
+          aria-label="Toggle menu"
+        >
+          {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
+      </div>
 
-              <div className="pt-4 border-t border-white/10 space-y-2">
-                <Link
-                  href="/onboarding"
-                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-medium text-sm transition-all"
-                >
-                  <FileText size={15} />
-                  Upload Resume
-                </Link>
-                <Link
-                  href="/dashboard?sector=GOVERNMENT"
-                  className="flex items-center justify-center gap-2 w-full py-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 font-medium text-sm transition-all"
-                >
-                  <LayoutDashboard size={15} />
-                  Govt Analytics Panel
-                </Link>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-    </>
+      {/* Mobile menu */}
+      {mobileOpen && (
+        <div
+          style={{
+            position: "absolute",
+            top: 64,
+            left: 0,
+            right: 0,
+            background: "rgba(11, 15, 26, 0.97)",
+            backdropFilter: "blur(12px)",
+            borderBottom: "1px solid rgba(255,255,255,0.07)",
+            padding: "1rem",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.25rem",
+            zIndex: 99,
+          }}
+        >
+          {navLinks.map(({ href, label, icon: Icon }) => {
+            const active = pathname === href;
+            return (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setMobileOpen(false)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.75rem",
+                  padding: "0.75rem 1rem",
+                  borderRadius: 10,
+                  fontSize: "0.9rem",
+                  fontWeight: 500,
+                  textDecoration: "none",
+                  color: active ? "#a5b4fc" : "var(--text-secondary)",
+                  background: active ? "rgba(99,102,241,0.12)" : "transparent",
+                }}
+              >
+                <Icon size={18} />
+                {label}
+              </Link>
+            );
+          })}
+        </div>
+      )}
+    </nav>
   );
 }

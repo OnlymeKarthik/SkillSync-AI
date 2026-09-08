@@ -36,7 +36,10 @@ async def list_careers(
     db: AsyncSession = Depends(get_db),
 ):
     """Browse all available careers with rich filters."""
-    conditions, params = [], {"limit": page_size, "offset": (page - 1) * page_size}
+    # Build WHERE conditions as a list of safe SQL clause strings.
+    # ALL user inputs are passed as named bind parameters — never interpolated.
+    conditions: list[str] = []
+    params: dict = {"limit": page_size, "offset": (page - 1) * page_size}
 
     if domain:
         conditions.append("domain ILIKE :domain")
@@ -44,14 +47,14 @@ async def list_careers(
     if difficulty:
         conditions.append("difficulty = :difficulty")
         params["difficulty"] = difficulty
-    if salary_min:
+    if salary_min is not None:
         conditions.append("avg_salary_min >= :salary_min")
         params["salary_min"] = salary_min
-    if growth_rate_min:
+    if growth_rate_min is not None:
         conditions.append("growth_rate >= :growth_rate_min")
         params["growth_rate_min"] = growth_rate_min
 
-    where = f"WHERE {' AND '.join(conditions)}" if conditions else ""
+    where = ("WHERE " + " AND ".join(conditions)) if conditions else ""
     result = await db.execute(
         text(f"""
             SELECT id, slug, title, domain, difficulty,

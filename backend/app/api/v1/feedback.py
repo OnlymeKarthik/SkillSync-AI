@@ -33,5 +33,7 @@ async def submit_feedback(request: FeedbackRequest, db: AsyncSession = Depends(g
         """),
         request.model_dump(),
     )
-    await db.commit()
+    # NOTE: Do NOT call db.commit() here — the postgres_session() context manager
+    # in database.py already auto-commits on clean exit. Double-committing
+    # raises InvalidRequestError on some SQLAlchemy versions.
     return {"status": "submitted", "message": "Thank you for your feedback!"}

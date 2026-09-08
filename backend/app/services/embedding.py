@@ -54,7 +54,7 @@ class EmbeddingService:
         """
         log.info("Loading embedding model...", model=settings.EMBEDDING_MODEL)
         # Run in thread pool — model loading is CPU-bound and blocking
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         self._model = await loop.run_in_executor(
             None,
             lambda: SentenceTransformer(
@@ -92,7 +92,7 @@ class EmbeddingService:
         if not text:
             raise ValueError("Cannot embed empty text.")
 
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         embedding = await loop.run_in_executor(
             None,
             lambda: self._model.encode(
@@ -128,7 +128,7 @@ class EmbeddingService:
         # Normalize all texts
         texts = [t.strip().lower() for t in texts if t.strip()]
 
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         embeddings = await loop.run_in_executor(
             None,
             lambda: self._model.encode(

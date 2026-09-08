@@ -42,13 +42,26 @@ class CareerAdvisorAgent:
     """Streaming career advisor with topic filtering and multi-provider fallback."""
 
     def __init__(self):
-        self._groq = ChatGroq(
-            api_key=settings.GROQ_API_KEY,
-            model=settings.GROQ_MODEL,
-            temperature=0.7,
-            max_tokens=500,
-            streaming=True,
-        )
+        # Lazy-initialized to avoid crashing at import time when GROQ_API_KEY
+        # is blank/placeholder. The client is created on first actual use.
+        self._groq: ChatGroq | None = None
+
+    def _get_groq(self) -> ChatGroq:
+        """Return the Groq client, creating it on first call."""
+        if self._groq is None:
+            if not settings.GROQ_API_KEY or settings.GROQ_API_KEY.startswith("your_"):
+                raise RuntimeError(
+                    "GROQ_API_KEY is not set. Add a valid key to backend/.env "
+                    "(get one free at console.groq.com)."
+                )
+            self._groq = ChatGroq(
+                api_key=settings.GROQ_API_KEY,
+                model=settings.GROQ_MODEL,
+                temperature=0.7,
+                max_tokens=settings.GROQ_MAX_TOKENS,
+                streaming=True,
+            )
+        return self._groq
 
     def _is_career_related(self, message: str) -> bool:
         """
@@ -100,7 +113,7 @@ class CareerAdvisorAgent:
 
         # Stream response
         try:
-            async for chunk in self._groq.astream(lc_messages):
+            async for chunk in self._get_groq().astream(lc_messages):
                 if chunk.content:
                     yield json.dumps({"token": chunk.content, "done": False})
             yield json.dumps({"token": "", "done": True})

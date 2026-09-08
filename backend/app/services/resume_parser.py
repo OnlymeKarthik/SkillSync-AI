@@ -43,15 +43,29 @@ class ResumeParserService:
     """Parses resumes and extracts structured skill profiles."""
 
     def __init__(self):
-        self._llm = ChatGroq(
-            api_key=settings.GROQ_API_KEY,
-            model=settings.GROQ_MODEL,
-            temperature=0,           # Deterministic output for structured extraction
-            max_tokens=2000,
-        )
-        self._chain = SKILL_EXTRACTION_PROMPT | self._llm
-        # In-memory session store (use Redis in production)
+        # Lazy-initialized to avoid crashing at import time when GROQ_API_KEY
+        # is blank/placeholder.
+        self._llm: ChatGroq | None = None
+        self._chain = None
+        # In-memory session store (TODO: migrate to Redis for persistence)
         self._sessions: dict = {}
+
+    def _get_chain(self):
+        """Build the LangChain extraction chain on first use."""
+        if self._chain is None:
+            if not settings.GROQ_API_KEY or settings.GROQ_API_KEY.startswith("your_"):
+                raise RuntimeError(
+                    "GROQ_API_KEY is not set. Add a valid key to backend/.env "
+                    "(get one free at console.groq.com)."
+                )
+            self._llm = ChatGroq(
+                api_key=settings.GROQ_API_KEY,
+                model=settings.GROQ_MODEL,
+                temperature=0,
+                max_tokens=2000,
+            )
+            self._chain = SKILL_EXTRACTION_PROMPT | self._llm
+        return self._chain
 
     def _extract_text_from_pdf(self, file_path: str) -> str:
         """Extract raw text from a PDF using PyMuPDF."""
@@ -95,7 +109,7 @@ class ResumeParserService:
 
         # Step 2: LLM extraction
         try:
-            response = await self._chain.ainvoke({"resume_text": raw_text[:8000]})  # Truncate to token limit
+            response = await self._get_chain().ainvoke({"resume_text": raw_text[:8000]})  # Truncate to token limit
             parsed = json.loads(response.content)
         except json.JSONDecodeError:
             log.error("LLM returned invalid JSON", session_id=session_id)
@@ -185,6 +199,13 @@ class ResumeParserService:
         label = "Ready" if score >= 80 else "Almost There" if score >= 50 else "Needs Work"
         upskill_bonus = min(score + 35, 100)
 
+        # Salary is stored as annual INR in the DB.
+        # Convert to monthly for display: annual / 12, then format as LPA (lakhs per annum).
+        def fmt_lpa(annual_inr: int) -> str:
+            """Format annual INR as '₹X.XL/yr' (lakhs per annum)."""
+            lpa = round(annual_inr / 100_000, 1)
+            return f"₹{lpa}L/yr"
+
         return CareerScoreResponse(
             career_slug=career_slug,
             career_title=career_title,
@@ -192,8 +213,8 @@ class ResumeParserService:
             matched_skills=matched,
             missing_skills=missing,
             partially_matched=partial,
-            estimated_salary_current=f"₹{salary_min//1000}K–₹{int(salary_min*score/100//1000)}K/mo",
-            estimated_salary_upskilled=f"₹{salary_min//1000}K–₹{salary_max//1000}K/mo",
+            estimated_salary_current=fmt_lpa(int(salary_min * score / 100)),
+            estimated_salary_upskilled=f"{fmt_lpa(salary_min)}–{fmt_lpa(salary_max)}",
             readiness_label=label,
         )
 

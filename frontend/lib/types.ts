@@ -1,10 +1,10 @@
 /**
- * Vidyavani — Shared TypeScript Types
- * Used across all components and API calls.
+ * Vidyavani — TypeScript Types
+ * Single source of truth for all API response shapes.
  */
 
 // =============================================================================
-// API Response Types
+// Dashboard
 // =============================================================================
 
 export interface DashboardStats {
@@ -20,14 +20,36 @@ export interface DashboardStats {
 export interface SkillGapChartItem {
   skill: string;
   "Private Sector": number;
-  "Government": number;
+  Government: number;
 }
 
 export interface GapAnalysisResponse {
   chart_data: SkillGapChartItem[];
   period: string;
   categories: string[];
+  sector_filter: string;
 }
+
+// =============================================================================
+// Skill Gap Summary (from /skills/gap-summary)
+// =============================================================================
+
+export interface SkillGapSummaryItem {
+  skill_name: string;
+  total_demand: number;
+  peak_demand_percent: number;
+  sector_type: string;
+}
+
+export interface SkillGapSummaryResponse {
+  sector_type: string;
+  period: string;
+  gaps: SkillGapSummaryItem[];
+}
+
+// =============================================================================
+// Skills Match
+// =============================================================================
 
 export interface CurriculumMatch {
   skill_id: string;
@@ -44,6 +66,10 @@ export interface SkillMatchResponse {
   is_curriculum_gap: boolean;
   gap_severity: "none" | "low" | "medium" | "high";
 }
+
+// =============================================================================
+// Resume
+// =============================================================================
 
 export interface ExtractedSkill {
   name: string;
@@ -75,19 +101,36 @@ export interface CareerScore {
   readiness_label: "Ready" | "Almost There" | "Needs Work";
 }
 
+// =============================================================================
+// Careers
+// =============================================================================
+
 export interface Career {
   id: string;
   slug: string;
   title: string;
   domain: string;
-  description: string;
-  difficulty: "beginner" | "intermediate" | "advanced";
-  avg_salary_min: number;
-  avg_salary_max: number;
-  growth_rate: number;
-  nsqf_levels: number[];
+  description?: string | null;
+  difficulty?: "beginner" | "intermediate" | "advanced" | null;
+  avg_salary_min?: number | null;
+  avg_salary_max?: number | null;
+  growth_rate?: number | null;
+  nsqf_levels?: number[] | null;
   match_score?: number;
+  top_skills?: string[] | null;
+  required_skills?: Array<{ skill: string; importance: number }> | null;
+  embedding?: null;
+  created_at?: string;
 }
+
+export interface CareerRecommendation extends Career {
+  skill_similarity: number;
+  match_score: number;
+}
+
+// =============================================================================
+// Jobs
+// =============================================================================
 
 export interface JobPosting {
   id: string;
@@ -103,20 +146,18 @@ export interface JobPosting {
   experience_max: number | null;
   url: string | null;
   posted_at: string | null;
-  required_skills?: string[];
-  nsqf_level?: number;
-  description?: string;
 }
 
 // =============================================================================
-// Knowledge Graph Types (for D3.js visualization)
+// Knowledge Graph
 // =============================================================================
 
 export interface GraphNode {
   id: string;
   label: string;
-  group: string;       // Category — used for coloring
-  gap_score: number;   // 0–1, used for node size
+  group: string;
+  gap_score: number;
+  relationships?: Array<{ type: string; target: string }>;
   x?: number;
   y?: number;
 }
@@ -124,16 +165,17 @@ export interface GraphNode {
 export interface GraphLink {
   source: string;
   target: string;
-  type: "PREREQUISITE_OF" | "REQUIRED_BY" | "TAUGHT_BY";
+  type: string;
 }
 
 export interface GraphData {
   nodes: GraphNode[];
   links: GraphLink[];
+  count: number;
 }
 
 // =============================================================================
-// Roadmap Types
+// Roadmap
 // =============================================================================
 
 export interface RoadmapResource {
@@ -164,10 +206,56 @@ export interface RoadmapDecision {
 
 export type RoadmapItem = RoadmapStage | RoadmapDecision;
 
+export interface RoadmapGenerateRequest {
+  target_career_slug: string;
+  current_skills: string[];
+  track_preference: "free" | "paid" | "hybrid";
+  timeline_weeks: number;
+  experience_level: "beginner" | "intermediate" | "advanced";
+  user_id?: string;
+}
+
 // =============================================================================
-// UI State Types
+// Chat
+// =============================================================================
+
+export interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+  timestamp?: number;
+}
+
+export interface ChatRequest {
+  message: string;
+  history: ChatMessage[];
+  current_skills?: string[];
+}
+
+// =============================================================================
+// Feedback
+// =============================================================================
+
+export interface FeedbackRequest {
+  name?: string;
+  email?: string;
+  category: "bug" | "suggestion" | "general" | "data-error";
+  message: string;
+}
+
+// =============================================================================
+// Filter Types
 // =============================================================================
 
 export type SectorFilter = "all" | "PRIVATE" | "GOVERNMENT";
 export type TrackPreference = "free" | "paid" | "hybrid";
 export type DifficultyLevel = "beginner" | "intermediate" | "advanced";
+
+// =============================================================================
+// API state
+// =============================================================================
+
+export interface ApiState<T> {
+  data: T | null;
+  loading: boolean;
+  error: string | null;
+}

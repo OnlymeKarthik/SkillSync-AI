@@ -87,7 +87,7 @@ async def upload_resume(
 
     log.info("Resume uploaded", session_id=session_id, size=len(content))
 
-    # Parse and extract skills
+    # Parse and extract skills — always clean up the temp file afterwards
     try:
         analysis = await resume_parser_service.parse(
             file_path=file_path,
@@ -100,6 +100,12 @@ async def upload_resume(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Resume analysis failed: {str(e)}",
         )
+    finally:
+        # Clean up the uploaded file — we've extracted all needed data into the session
+        try:
+            os.remove(file_path)
+        except OSError:
+            pass  # Non-fatal: file may already be gone
 
     return analysis
 
