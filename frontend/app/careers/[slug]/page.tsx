@@ -145,8 +145,8 @@ export default async function CareerDetailPage({
                   style={{
                     padding: "1rem",
                     borderRadius: 10,
-                    background: "rgba(99,102,241,0.08)",
-                    border: "1px solid rgba(99,102,241,0.15)",
+                    background: "rgba(13,148,136,0.08)",
+                    border: "1px solid rgba(13,148,136,0.15)",
                   }}
                 >
                   <div
@@ -154,7 +154,7 @@ export default async function CareerDetailPage({
                       display: "flex",
                       alignItems: "center",
                       gap: "0.4rem",
-                      color: "#818cf8",
+                      color: "#2dd4bf",
                       fontSize: "0.75rem",
                       fontWeight: 600,
                       marginBottom: "0.5rem",
@@ -282,7 +282,7 @@ export default async function CareerDetailPage({
                                 width: `${item.importance * 100}%`,
                                 height: "100%",
                                 background:
-                                  "linear-gradient(90deg, #6366f1, #8b5cf6)",
+                                  "linear-gradient(90deg, #0d9488, #14b8a6)",
                                 borderRadius: 2,
                               }}
                             />

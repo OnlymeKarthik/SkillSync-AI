@@ -134,14 +134,14 @@ export default function JobsPage() {
                   transition: "all 0.15s",
                   background:
                     sector === s.value
-                      ? "rgba(99,102,241,0.2)"
+                      ? "rgba(13,148,136,0.2)"
                       : "transparent",
                   borderColor:
                     sector === s.value
-                      ? "rgba(99,102,241,0.4)"
+                      ? "rgba(13,148,136,0.4)"
                       : "var(--border)",
                   color:
-                    sector === s.value ? "#a5b4fc" : "var(--text-muted)",
+                    sector === s.value ? "#5eead4" : "var(--text-muted)",
                 }}
               >
                 {s.label}

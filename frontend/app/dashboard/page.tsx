@@ -184,14 +184,14 @@ export default function DashboardPage() {
                       transition: "all 0.15s",
                       background:
                         sector === s.value
-                          ? "rgba(99,102,241,0.2)"
+                          ? "rgba(13,148,136,0.2)"
                           : "transparent",
                       borderColor:
                         sector === s.value
-                          ? "rgba(99,102,241,0.4)"
+                          ? "rgba(13,148,136,0.4)"
                           : "var(--border)",
                       color:
-                        sector === s.value ? "#a5b4fc" : "var(--text-muted)",
+                        sector === s.value ? "#5eead4" : "var(--text-muted)",
                     }}
                   >
                     {s.label}
@@ -232,7 +232,7 @@ export default function DashboardPage() {
                   <YAxis tick={{ fill: "#64748b", fontSize: 11 }} />
                   <Tooltip
                     contentStyle={{
-                      background: "#1a2236",
+                      background: "#1a2332",
                       border: "1px solid rgba(255,255,255,0.1)",
                       borderRadius: 8,
                       fontSize: 12,
@@ -244,7 +244,7 @@ export default function DashboardPage() {
                   />
                   <Bar
                     dataKey="Private Sector"
-                    fill="#6366f1"
+                    fill="#0d9488"
                     radius={[4, 4, 0, 0]}
                   />
                   <Bar

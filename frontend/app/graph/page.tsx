@@ -10,14 +10,15 @@ import { Network, Filter, Info } from "lucide-react";
 
 // Group → color mapping for nodes
 const GROUP_COLORS: Record<string, string> = {
-  AI: "#6366f1",
-  "Data & AI": "#6366f1",
-  "Cloud & DevOps": "#3b82f6",
-  "Software Development": "#10b981",
+  AI: "#0d9488",
+  "Data & AI": "#0d9488",
+  Cloud: "#0ea5e9",
+  Engineering: "#10b981",
   Security: "#ef4444",
-  Management: "#f59e0b",
-  Design: "#ec4899",
-  "Government & PSU": "#8b5cf6",
+  Web: "#f59e0b",
+  Management: "#f97316",
+  Design: "#a78bfa",
+  "Government & PSU": "#14b8a6",
   Career: "#06b6d4",
   Skill: "#94a3b8",
   default: "#64748b",

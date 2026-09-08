@@ -128,15 +128,15 @@ export default function CareersPage() {
                   transition: "all 0.15s",
                   background:
                     (domain === "" && d === "All") || domain === d
-                      ? "rgba(99,102,241,0.2)"
+                      ? "rgba(13,148,136,0.2)"
                       : "transparent",
                   borderColor:
                     (domain === "" && d === "All") || domain === d
-                      ? "rgba(99,102,241,0.4)"
+                      ? "rgba(13,148,136,0.4)"
                       : "var(--border)",
                   color:
                     (domain === "" && d === "All") || domain === d
-                      ? "#a5b4fc"
+                      ? "#5eead4"
                       : "var(--text-muted)",
                 }}
               >
@@ -330,7 +330,7 @@ export default function CareersPage() {
                       gap: "0.35rem",
                       fontSize: "0.82rem",
                       fontWeight: 600,
-                      color: "#818cf8",
+                      color: "#2dd4bf",
                     }}
                   >
                     View details

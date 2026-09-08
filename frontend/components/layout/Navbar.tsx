@@ -30,12 +30,7 @@ export function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  // Track scroll for navbar transparency
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+
 
   return (
     <nav
@@ -44,7 +39,7 @@ export function Navbar() {
         top: 0,
         zIndex: 100,
         height: 64,
-        background: "rgba(11, 15, 26, 0.85)",
+        background: "rgba(12, 16, 23, 0.85)",
         backdropFilter: "blur(12px)",
         borderBottom: "1px solid rgba(255,255,255,0.07)",
       }}
@@ -75,7 +70,7 @@ export function Navbar() {
               width: 32,
               height: 32,
               borderRadius: 8,
-              background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+              background: "linear-gradient(135deg, #0d9488, #14b8a6)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -123,12 +118,12 @@ export function Navbar() {
                   fontWeight: 500,
                   textDecoration: "none",
                   transition: "background 0.15s, color 0.15s",
-                  color: active ? "#a5b4fc" : "var(--text-secondary)",
+                  color: active ? "#5eead4" : "var(--text-secondary)",
                   background: active
-                    ? "rgba(99,102,241,0.12)"
+                    ? "rgba(13,148,136,0.12)"
                     : "transparent",
                   border: active
-                    ? "1px solid rgba(99,102,241,0.2)"
+                    ? "1px solid rgba(13,148,136,0.2)"
                     : "1px solid transparent",
                   whiteSpace: "nowrap",
                 }}
@@ -167,7 +162,7 @@ export function Navbar() {
             top: 64,
             left: 0,
             right: 0,
-            background: "rgba(11, 15, 26, 0.97)",
+            background: "rgba(12, 16, 23, 0.97)",
             backdropFilter: "blur(12px)",
             borderBottom: "1px solid rgba(255,255,255,0.07)",
             padding: "1rem",
@@ -193,8 +188,8 @@ export function Navbar() {
                   fontSize: "0.9rem",
                   fontWeight: 500,
                   textDecoration: "none",
-                  color: active ? "#a5b4fc" : "var(--text-secondary)",
-                  background: active ? "rgba(99,102,241,0.12)" : "transparent",
+                  color: active ? "#5eead4" : "var(--text-secondary)",
+                  background: active ? "rgba(13,148,136,0.12)" : "transparent",
                 }}
               >
                 <Icon size={18} />

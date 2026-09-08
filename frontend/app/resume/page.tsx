@@ -202,9 +202,9 @@ export default function ResumePage() {
                 borderStyle: dragOver ? "solid" : "dashed",
                 borderWidth: 2,
                 borderColor: dragOver
-                  ? "rgba(99,102,241,0.6)"
+                  ? "rgba(13,148,136,0.6)"
                   : "rgba(255,255,255,0.12)",
-                background: dragOver ? "rgba(99,102,241,0.06)" : undefined,
+                background: dragOver ? "rgba(13,148,136,0.06)" : undefined,
                 cursor: "pointer",
                 textAlign: "center",
                 transition: "all 0.2s",
@@ -232,12 +232,12 @@ export default function ResumePage() {
                       width: 56,
                       height: 56,
                       borderRadius: 16,
-                      background: "rgba(99,102,241,0.12)",
-                      border: "1px solid rgba(99,102,241,0.25)",
+                      background: "rgba(13,148,136,0.12)",
+                      border: "1px solid rgba(13,148,136,0.25)",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      color: "#818cf8",
+                      color: "#2dd4bf",
                     }}
                   >
                     <Upload size={24} />
@@ -411,8 +411,8 @@ export default function ResumePage() {
                     <p style={{ fontSize: "0.7rem", color: "#34d399", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.25rem" }}>Current Salary Est.</p>
                     <p style={{ fontWeight: 700 }}>{score.estimated_salary_current}</p>
                   </div>
-                  <div style={{ padding: "0.875rem", borderRadius: 8, background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.15)" }}>
-                    <p style={{ fontSize: "0.7rem", color: "#818cf8", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.25rem" }}>After Upskilling</p>
+                  <div style={{ padding: "0.875rem", borderRadius: 8, background: "rgba(13,148,136,0.06)", border: "1px solid rgba(13,148,136,0.15)" }}>
+                    <p style={{ fontSize: "0.7rem", color: "#2dd4bf", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.25rem" }}>After Upskilling</p>
                     <p style={{ fontWeight: 700 }}>{score.estimated_salary_upskilled}</p>
                   </div>
                 </div>

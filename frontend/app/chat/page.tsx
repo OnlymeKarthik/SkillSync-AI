@@ -121,7 +121,7 @@ export default function ChatPage() {
               width: 38,
               height: 38,
               borderRadius: 10,
-              background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+              background: "linear-gradient(135deg, #0d9488, #14b8a6)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -174,7 +174,7 @@ export default function ChatPage() {
           style={{
             borderBottom: "1px solid var(--border)",
             padding: "1rem 1.5rem",
-            background: "rgba(99,102,241,0.05)",
+            background: "rgba(13,148,136,0.05)",
             flexShrink: 0,
           }}
         >
@@ -226,7 +226,7 @@ export default function ChatPage() {
                 width: 64,
                 height: 64,
                 borderRadius: 20,
-                background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+                background: "linear-gradient(135deg, #0d9488, #14b8a6)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -294,8 +294,8 @@ export default function ChatPage() {
                   }}
                   onMouseEnter={(e) => {
                     (e.currentTarget as HTMLElement).style.borderColor =
-                      "rgba(99,102,241,0.4)";
-                    (e.currentTarget as HTMLElement).style.color = "#a5b4fc";
+                      "rgba(13,148,136,0.4)";
+                    (e.currentTarget as HTMLElement).style.color = "#5eead4";
                   }}
                   onMouseLeave={(e) => {
                     (e.currentTarget as HTMLElement).style.borderColor =
@@ -331,7 +331,7 @@ export default function ChatPage() {
                     flexShrink: 0,
                     background:
                       msg.role === "user"
-                        ? "linear-gradient(135deg, #6366f1, #8b5cf6)"
+                        ? "linear-gradient(135deg, #0d9488, #14b8a6)"
                         : "rgba(255,255,255,0.08)",
                     border: "1px solid var(--border)",
                     display: "flex",
@@ -342,7 +342,7 @@ export default function ChatPage() {
                   {msg.role === "user" ? (
                     <User size={14} color="white" />
                   ) : (
-                    <Bot size={14} color="#a5b4fc" />
+                    <Bot size={14} color="#5eead4" />
                   )}
                 </div>
 
@@ -436,7 +436,7 @@ export default function ChatPage() {
               overflowY: "auto",
             }}
             onFocus={(e) => {
-              e.target.style.borderColor = "rgba(99,102,241,0.5)";
+              e.target.style.borderColor = "rgba(13,148,136,0.5)";
             }}
             onBlur={(e) => {
               e.target.style.borderColor = "var(--border)";

@@ -10,7 +10,7 @@ interface StatCardProps {
 }
 
 const colorMap = {
-  indigo: "#6366f1",
+  indigo: "#0d9488",
   green: "#10b981",
   amber: "#f59e0b",
   blue: "#3b82f6",

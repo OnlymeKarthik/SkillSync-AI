@@ -13,7 +13,7 @@ export default function NotFound() {
         textAlign: "center",
         padding: "2rem",
         background:
-          "radial-gradient(ellipse at 50% 30%, rgba(99,102,241,0.08) 0%, transparent 65%)",
+          "radial-gradient(ellipse at 50% 30%, rgba(13,148,136,0.08) 0%, transparent 65%)",
       }}
     >
       <div

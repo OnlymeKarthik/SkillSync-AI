@@ -98,7 +98,7 @@ export default function DiscoverPage() {
                   gap: "0.5rem",
                 }}
               >
-                <Search size={16} style={{ color: "#6366f1" }} />
+                <Search size={16} style={{ color: "#0d9488" }} />
                 Curriculum Coverage Search
               </h2>
               <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", marginBottom: "1rem" }}>
@@ -261,14 +261,14 @@ export default function DiscoverPage() {
                       border: "1px solid",
                       background:
                         sector === s.value
-                          ? "rgba(99,102,241,0.2)"
+                          ? "rgba(13,148,136,0.2)"
                           : "transparent",
                       borderColor:
                         sector === s.value
-                          ? "rgba(99,102,241,0.4)"
+                          ? "rgba(13,148,136,0.4)"
                           : "var(--border)",
                       color:
-                        sector === s.value ? "#a5b4fc" : "var(--text-muted)",
+                        sector === s.value ? "#5eead4" : "var(--text-muted)",
                       transition: "all 0.15s",
                     }}
                   >
@@ -313,8 +313,8 @@ export default function DiscoverPage() {
                       fontFamily: "inherit",
                     }}
                     onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.borderColor = "rgba(99,102,241,0.35)";
-                      (e.currentTarget as HTMLElement).style.background = "rgba(99,102,241,0.06)";
+                      (e.currentTarget as HTMLElement).style.borderColor = "rgba(13,148,136,0.35)";
+                      (e.currentTarget as HTMLElement).style.background = "rgba(13,148,136,0.06)";
                     }}
                     onMouseLeave={(e) => {
                       (e.currentTarget as HTMLElement).style.borderColor = "var(--border)";

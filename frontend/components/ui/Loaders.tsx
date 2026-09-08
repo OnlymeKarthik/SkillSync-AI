@@ -50,8 +50,8 @@ export function Spinner({ size = 20 }: { size?: number }) {
       style={{
         width: size,
         height: size,
-        border: "2px solid rgba(99,102,241,0.25)",
-        borderTop: "2px solid #6366f1",
+        border: "2px solid rgba(13,148,136,0.25)",
+        borderTop: "2px solid #0d9488",
         borderRadius: "50%",
         animation: "spin 0.7s linear infinite",
         flexShrink: 0,

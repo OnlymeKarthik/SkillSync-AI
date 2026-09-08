@@ -29,7 +29,7 @@ export default function HomePage() {
       description:
         "Real-time analytics comparing industry skill demand vs. NSQF curriculum coverage — split by private and government sectors.",
       href: "/dashboard",
-      color: "#6366f1",
+      color: "#0d9488",
     },
     {
       icon: Briefcase,
@@ -37,7 +37,7 @@ export default function HomePage() {
       description:
         "Browse 12 curated tech careers with salary ranges, growth rates, NSQF levels, and required skills.",
       href: "/careers",
-      color: "#8b5cf6",
+      color: "#14b8a6",
     },
     {
       icon: Map,
@@ -69,7 +69,7 @@ export default function HomePage() {
       description:
         "Explore skill relationships and career paths through a live D3 force-directed graph powered by Neo4j.",
       href: "/graph",
-      color: "#ec4899",
+      color: "#f59e0b",
     },
   ];
 
@@ -78,7 +78,7 @@ export default function HomePage() {
         {
           value: stats.total_jobs_scraped.toLocaleString(),
           label: "Job Postings Indexed",
-          color: "#6366f1",
+          color: "#0d9488",
         },
         {
           value: stats.total_skill_gaps.toLocaleString(),
@@ -105,7 +105,7 @@ export default function HomePage() {
         style={{
           padding: "6rem 0 5rem",
           background:
-            "radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.15) 0%, transparent 60%)",
+            "radial-gradient(ellipse at 50% 0%, rgba(13,148,136,0.15) 0%, transparent 60%)",
           position: "relative",
           overflow: "hidden",
         }}
@@ -116,7 +116,7 @@ export default function HomePage() {
             position: "absolute",
             inset: 0,
             backgroundImage:
-              "linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px)",
+              "linear-gradient(rgba(13,148,136,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(13,148,136,0.04) 1px, transparent 1px)",
             backgroundSize: "40px 40px",
             maskImage:
               "radial-gradient(ellipse at center, black 20%, transparent 75%)",
@@ -130,13 +130,13 @@ export default function HomePage() {
               display: "inline-flex",
               alignItems: "center",
               gap: "0.5rem",
-              background: "rgba(99,102,241,0.1)",
-              border: "1px solid rgba(99,102,241,0.25)",
+              background: "rgba(13,148,136,0.1)",
+              border: "1px solid rgba(13,148,136,0.25)",
               borderRadius: 100,
               padding: "0.375rem 0.875rem",
               fontSize: "0.78rem",
               fontWeight: 600,
-              color: "#a5b4fc",
+              color: "#5eead4",
               marginBottom: "1.75rem",
             }}
           >
@@ -388,14 +388,14 @@ export default function HomePage() {
                 icon: <FileText size={22} />,
                 title: "Upload Your Resume",
                 desc: "We extract your skills using AI and build your profile.",
-                color: "#6366f1",
+                color: "#0d9488",
               },
               {
                 step: "02",
                 icon: <TrendingUp size={22} />,
                 title: "Analyze the Gap",
                 desc: "We compare your skills against real job postings and NSQF curricula.",
-                color: "#8b5cf6",
+                color: "#14b8a6",
               },
               {
                 step: "03",
@@ -475,8 +475,8 @@ export default function HomePage() {
           <div
             style={{
               background:
-                "linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.08))",
-              border: "1px solid rgba(99,102,241,0.2)",
+                "linear-gradient(135deg, rgba(13,148,136,0.1), rgba(20,184,166,0.08))",
+              border: "1px solid rgba(13,148,136,0.2)",
               borderRadius: "var(--radius-xl)",
               padding: "3rem 2rem",
             }}

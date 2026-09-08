@@ -55,7 +55,7 @@ function StageCard({ stage }: { stage: RoadmapStage }) {
               width: 36,
               height: 36,
               borderRadius: "50%",
-              background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+              background: "linear-gradient(135deg, #0d9488, #14b8a6)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -198,7 +198,7 @@ function StageCard({ stage }: { stage: RoadmapStage }) {
                     }}
                     onMouseEnter={(e) => {
                       (e.currentTarget as HTMLElement).style.borderColor =
-                        "rgba(99,102,241,0.35)";
+                        "rgba(13,148,136,0.35)";
                     }}
                     onMouseLeave={(e) => {
                       (e.currentTarget as HTMLElement).style.borderColor =
@@ -443,7 +443,7 @@ function RoadmapContent() {
                 gap: "0.5rem",
               }}
             >
-              <Map size={16} style={{ color: "#6366f1" }} />
+              <Map size={16} style={{ color: "#0d9488" }} />
               Configure Your Roadmap
             </h2>
 
@@ -535,15 +535,15 @@ function RoadmapContent() {
                         transition: "all 0.15s",
                         background:
                           track === t.value
-                            ? "rgba(99,102,241,0.15)"
+                            ? "rgba(13,148,136,0.15)"
                             : "transparent",
                         borderColor:
                           track === t.value
-                            ? "rgba(99,102,241,0.4)"
+                            ? "rgba(13,148,136,0.4)"
                             : "var(--border)",
                         color:
                           track === t.value
-                            ? "#a5b4fc"
+                            ? "#5eead4"
                             : "var(--text-secondary)",
                       }}
                     >
@@ -555,7 +555,7 @@ function RoadmapContent() {
                           marginTop: "0.2rem",
                           color:
                             track === t.value
-                              ? "#a5b4fc"
+                              ? "#5eead4"
                               : "var(--text-muted)",
                         }}
                       >
@@ -623,14 +623,14 @@ function RoadmapContent() {
                         transition: "all 0.15s",
                         background:
                           level === l
-                            ? "rgba(99,102,241,0.15)"
+                            ? "rgba(13,148,136,0.15)"
                             : "transparent",
                         borderColor:
                           level === l
-                            ? "rgba(99,102,241,0.4)"
+                            ? "rgba(13,148,136,0.4)"
                             : "var(--border)",
                         color:
-                          level === l ? "#a5b4fc" : "var(--text-secondary)",
+                          level === l ? "#5eead4" : "var(--text-secondary)",
                         textTransform: "capitalize",
                       }}
                     >
