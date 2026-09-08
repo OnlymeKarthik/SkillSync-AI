@@ -66,13 +66,38 @@ function ForceGraph({
 
       const ns = nodesRef.current;
 
+      // Node map for relationship lookups
+      const nodeMap = new Map(ns.map((n) => [n.id, n]));
+
+      // Spring forces for connected nodes
+      ns.forEach((node) => {
+        if (!node.relationships) return;
+        node.relationships.forEach((rel) => {
+          if (!rel.target) return;
+          const targetNode = nodeMap.get(rel.target);
+          if (targetNode && targetNode !== node) {
+            const dx = targetNode.x! - node.x!;
+            const dy = targetNode.y! - node.y!;
+            const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+            const desiredDist = 120;
+            const spring = (dist - desiredDist) * 0.003;
+            const sx = (dx / dist) * spring;
+            const sy = (dy / dist) * spring;
+            node.vx += sx;
+            node.vy += sy;
+            targetNode.vx -= sx;
+            targetNode.vy -= sy;
+          }
+        });
+      });
+
       // Simple repulsion force
       for (let i = 0; i < ns.length; i++) {
         for (let j = i + 1; j < ns.length; j++) {
           const dx = ns[j].x! - ns[i].x!;
           const dy = ns[j].y! - ns[i].y!;
           const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-          const force = Math.min(3000 / (dist * dist), 8);
+          const force = Math.min(2500 / (dist * dist), 6);
           const fx = (dx / dist) * force;
           const fy = (dy / dist) * force;
           ns[i].vx -= fx;
@@ -94,6 +119,32 @@ function ForceGraph({
           ns[i].y = Math.max(30, Math.min(H - 30, ns[i].y!));
         }
       }
+
+      // Draw edges between connected nodes
+      ns.forEach((node) => {
+        if (!node.relationships) return;
+        node.relationships.forEach((rel) => {
+          if (!rel.target) return;
+          const targetNode = nodeMap.get(rel.target);
+          if (targetNode) {
+            ctx.beginPath();
+            ctx.moveTo(node.x!, node.y!);
+            ctx.lineTo(targetNode.x!, targetNode.y!);
+            ctx.strokeStyle =
+              rel.type === "PREREQUISITE_OF"
+                ? "rgba(99, 102, 241, 0.4)"
+                : "rgba(255, 255, 255, 0.12)";
+            ctx.lineWidth = rel.type === "PREREQUISITE_OF" ? 1.5 : 1;
+            if (rel.type === "PREREQUISITE_OF") {
+              ctx.setLineDash([4, 4]);
+            } else {
+              ctx.setLineDash([]);
+            }
+            ctx.stroke();
+            ctx.setLineDash([]);
+          }
+        });
+      });
 
       // Draw nodes
       ns.forEach((node) => {
