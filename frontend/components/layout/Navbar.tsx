@@ -31,7 +31,13 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <nav
@@ -40,9 +46,12 @@ export function Navbar() {
         top: 0,
         zIndex: 100,
         height: 64,
-        background: "rgba(12, 16, 23, 0.85)",
+        background: scrolled ? "rgba(12, 16, 23, 0.95)" : "rgba(12, 16, 23, 0.75)",
         backdropFilter: "blur(12px)",
-        borderBottom: "1px solid rgba(255,255,255,0.07)",
+        borderBottom: scrolled
+          ? "1px solid rgba(255,255,255,0.1)"
+          : "1px solid rgba(255,255,255,0.05)",
+        transition: "all 0.2s ease",
       }}
     >
       <div

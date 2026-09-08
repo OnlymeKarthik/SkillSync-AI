@@ -132,7 +132,7 @@ function ForceGraph({
             ctx.lineTo(targetNode.x!, targetNode.y!);
             ctx.strokeStyle =
               rel.type === "PREREQUISITE_OF"
-                ? "rgba(99, 102, 241, 0.4)"
+                ? "rgba(13, 148, 136, 0.5)"
                 : "rgba(255, 255, 255, 0.12)";
             ctx.lineWidth = rel.type === "PREREQUISITE_OF" ? 1.5 : 1;
             if (rel.type === "PREREQUISITE_OF") {
